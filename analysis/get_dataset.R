@@ -1,3 +1,9 @@
+# Things to consider for the data loader
+#
+# - expose means and sd?
+# - only consider a fraction of the total data given autocorrelation
+# - only consider a limited lead time (timesteps) to limit compute
+# - normalize the data
 
 gpp_mean <- mean(gpp_train)
 gpp_sd <- sd(gpp_train)
