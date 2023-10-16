@@ -1,56 +1,80 @@
-# Things to consider for the data loader
-#
-# - expose means and sd?
-# - only consider a fraction of the total data given autocorrelation
-# - only consider a limited lead time (timesteps) to limit compute
-# - normalize the data
-
-gpp_mean <- mean(gpp_train)
-gpp_sd <- sd(gpp_train)
+# sequence to sequence
+# dataset generator
+# multiple y outputs
+# need to verify the format with the python code
 
 gpp_dataset <- dataset(
-  name = "gpp_dataset",
-
-  initialize = function(
-    x,
-    n_timesteps,
-    n_forecast,
-    sample_frac = 1
+    name = "dataset",
+    initialize = function(
+      x,
+      train_center,
+      sample_frac = 1
     ) {
 
-    self$n_timesteps <- n_timesteps
-    self$n_forecast <- n_forecast
+      # select values
+      train_mean <- train_center |>
+        select(
+          ends_with("_mean")
+        ) |>
+        unlist() |>
+        as.vector()
 
-    # normalize columns in input matrix
+      train_sd <- train_center |>
+        select(
+          ends_with("_sd")
+        ) |>
+        unlist() |>
+        as.vector()
 
+      # pass on the sitename to constrain the subset
+      self$sitename <- x |> select("sitename") |> unlist()
+      self$sites <- unique(self$sitename)
 
-    # convert to tensor
-    self$x <- torch_tensor((x - train_mean) / train_sd)
+      # split out the numeric data for centering
+      x <- x |>
+        ungroup() |>
+        select(
+          where(is.numeric)
+        )
 
-    # split out samples
-    n <- length(self$x) - self$n_timesteps - self$n_forecast + 1
+      # convert to matrix
+      x <- as.matrix(x)
 
-    self$starts <- sort(sample.int(
-      n = n,
-      size = n * sample_frac
-    ))
+      # normalize columns in input matrix
+      # note that apply transposes the data
+      # cols become rows (documented behaviour but uggh)
+      x <- t(apply(x, 1, function(x){(x - train_mean) / train_sd}))
 
-  },
+      # convert to tensor
+      self$x <- torch_tensor(x)
 
-  .getitem = function(i) {
+      # sample along the rows (time)
+      self$idx <- sort(sample.int(
+        n = length(self$sites),
+        size = length(self$sites) * sample_frac
+      ))
+    },
 
-    start <- self$starts[i]
-    end <- start + self$n_timesteps - 1
-    pred_length <- self$n_forecast
+    .getitem = function(i) {
 
-    list(
-      x = self$x[start:end],
-      y = self$x[(end + 1):(end + pred_length)]$squeeze(2)
-    )
+      # find locations corresponding
+      # to site locations only return a
+      # site at a time (index value)
+      l <- which(self$sitename == self$sites[self$idx[i]])
 
-  },
+      # here the true training data is
+      # generated, subsetting your target
+      # y (defined by one position end
+      # for a given )
+      list(
+        x = self$x[l,2:ncol(self$x)],
+        y = self$x[l,1]
+      )
+    },
 
-  .length = function() {
-    length(self$starts)
-  }
-)
+    # return length of the index
+    # for internal bookkeeping
+    .length = function() {
+      length(self$idx)
+    }
+  )

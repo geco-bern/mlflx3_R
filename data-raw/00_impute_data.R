@@ -21,6 +21,14 @@ df <- readr::read_csv("data-raw/df_20210510.csv") |>
     -'NEE_VUT_REF'
   )
 
+#---- flagging filled locations ----
+
+# assumes that they will be filled
+# below
+na_values <- is.na(df)
+na_values <- apply(na_values, 1, any)
+df$knn_fill <- na_values
+
 #---- Impute TA_F_DAY -----
 message("Imputing TA_F_DAY values...")
 df <- df |>
@@ -214,7 +222,7 @@ df <- df |>
           )
       ) |>
       dplyr::select(
-        -GPP_NT_VUT_REF
+        -GPP_NT_VUT_REF_FILLED
       )
     output
   }) |>

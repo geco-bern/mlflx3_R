@@ -28,12 +28,12 @@ rnn_model <- nn_module(
     # conditional fully connected layer
     if (self$conditional) {
       self$fc1 <- nn_sequential(
-        nn_linear(hidden_size + conditional_size, 32),
+        nn_linear(hidden_size + conditional_size, 64),
         nn_relu()
       )
     } else {
       self$fc1 <- nn_sequential(
-        nn_linear(hidden_size, 32),
+        nn_linear(hidden_size, 64),
         nn_relu()
       )
     }
@@ -56,16 +56,17 @@ rnn_model <- nn_module(
 
   forward = function(x, c) {
 
-    out <- self$rnn(x)$squeeze(1)
+    out <- self$rnn(x)[[1]] |> torch_squeeze()
 
     if (self$conditional) {
       out <- torch_cat(c(out, c), dim = 1)
     }
 
-    y <- self$fc1(out)
-    y <- self$fc2(y)
-    y <- self$fc3(y)
-    y <- self$fc4(y)
+    y <- self$fc1(out) |>
+      self$fc2()|>
+      self$fc3()|>
+      self$fc4() |>
+      torch_squeeze()
 
     return(y)
 
