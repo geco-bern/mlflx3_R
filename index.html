@@ -73,6 +73,16 @@
 </h1></div>
 <p>Torch ML time series prediction tests, trying to get to some sort of reproducibility.</p>
 <p>This will be a full port to R, abandoning python and probably optimizing the workflow and ML model for speed while at it.</p>
+<div class="section level2">
+<h2 id="docker-images">Docker images<a class="anchor" aria-label="anchor" href="#docker-images"></a>
+</h2>
+<p>For reproducible results and portability rocker images should be considered.</p>
+<p><a href="https://rocker-project.org/" class="external-link uri">https://rocker-project.org/</a></p>
+<pre><code># CPU-only
+docker run -p 8787:8787 rocker/ml
+# Machines with nvidia-docker and GPU support
+docker run --gpus all -p 8787:8787 rocker/ml</code></pre>
+</div>
 </div>
   </div>
 
