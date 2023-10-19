@@ -2,6 +2,24 @@
 # dataset generator
 # multiple y outputs
 # need to verify the format with the python code
+#
+# initialize = function(indices) {
+#   data <- self$prepare_mushroom_data(mushroom_data[indices, ])
+#   self$xcat <- data[[1]][[1]]
+#   self$xnum <- data[[1]][[2]]
+#   self$y <- data[[2]]
+# },
+#
+# .getitem = function(i) {
+#   xcat <- self$xcat[i, ]
+#   xnum <- self$xnum[i, ]
+#   y <- self$y[i, ]
+#
+#   list(x = list(xcat, xnum), y = y)
+# },
+#
+#  all <- torch_cat(list(embedded, xnum$to(dtype = torch_float())), dim = 2)
+#  output <- model(b$x[[1]]$to(device = device), b$x[[2]]$to(device = device))
 
 gpp_dataset <- dataset(
     name = "dataset",
@@ -47,6 +65,17 @@ gpp_dataset <- dataset(
 
       # convert to tensor
       self$x <- torch_tensor(x)
+
+      # one hot encoding static variables
+      # library(caret)
+      #
+      # #define one-hot encoding function
+      # dummy <- dummyVars(" ~ .", data=df)
+      #
+      # #perform one-hot encoding on data frame
+      # final_df <- data.frame(predict(dummy, newdata=df))
+
+      self$c <- torch_tensor()
 
       # sample along the rows (time)
       self$idx <- sort(sample.int(

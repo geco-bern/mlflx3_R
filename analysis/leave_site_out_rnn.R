@@ -22,9 +22,6 @@ conditional_features <- 21 # static across time
 
 # read in data, only retain relevant features
 df <- readRDS("data/df_imputed.rds") |>
-  dplyr::filter(
-    grepl("US",sitename)
-  ) |>
   dplyr::select(
     'sitename',
     'GPP_NT_VUT_REF',
@@ -77,14 +74,13 @@ lapply(sites, function(site){
     loss <- nnf_mse_loss(output, target)
     loss$backward()
     optimizer$step()
-
     loss$item()
   }
 
   valid_batch <- function(b) {
     output <- net(b$x$to(device = device))
 
-    # NOTE: check the squeeze to make dimensions match
+    # check the squeeze to make dimensions match
     target <- b$y$to(device = device)|>
       torch_squeeze()
 
