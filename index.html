@@ -78,6 +78,9 @@
 </h2>
 <p>For reproducible results and portability rocker images should be considered.</p>
 <p><a href="https://rocker-project.org/" class="external-link uri">https://rocker-project.org/</a></p>
+<p>A custom docker is provided which includes the GPU torch setup</p>
+<pre><code>docker build -f custom_ml.Dockerfile -t rocker-torch .
+docker run --gpus all -p 8787:8787 rocker-torch</code></pre>
 <pre><code># CPU-only
 docker run -p 8787:8787 rocker/ml
 # Machines with nvidia-docker and GPU support
@@ -92,6 +95,11 @@ docker run --gpus all -p 8787:8787 rocker/ml</code></pre>
 <p>Then force the version to 11.7 (as 11.8 is not yet available).</p>
 <pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CUDA<span class="op">=</span><span class="st">"11.7"</span><span class="op">)</span></span>
 <span><span class="fu">torch</span><span class="fu">::</span><span class="fu">install_torch</span><span class="op">(</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="mount-external-volume-for-running-the-project">Mount external volume for running the project<a class="anchor" aria-label="anchor" href="#mount-external-volume-for-running-the-project"></a>
+</h2>
+<pre><code>docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd)/work:/home/rstudio/ml_project -e ROOT=TRUE rocker-torch</code></pre>
 </div>
 </div>
   </div>
