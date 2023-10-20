@@ -63,19 +63,10 @@ gpp_dataset <- dataset(
       # cols become rows (documented behaviour but uggh)
       x <- t(apply(x, 1, function(x){(x - train_mean) / train_sd}))
 
-      # convert to tensor
       self$x <- torch_tensor(x)
 
-      # one hot encoding static variables
-      # library(caret)
-      #
-      # #define one-hot encoding function
-      # dummy <- dummyVars(" ~ .", data=df)
-      #
-      # #perform one-hot encoding on data frame
-      # final_df <- data.frame(predict(dummy, newdata=df))
-
-      self$c <- torch_tensor()
+      # add categorical data
+      #self$c <- ...
 
       # sample along the rows (time)
       self$idx <- sort(sample.int(

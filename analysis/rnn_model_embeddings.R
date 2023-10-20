@@ -1,13 +1,13 @@
-# model
-library(torch)
+# LSTM model
 
 rnn_model <- nn_module(
+  "Net",
   initialize = function(
-    input_size,
-    hidden_size,
-    conditional = 0,
-    conditional_size,
+    input_size = 11,
+    hidden_size = 256,
     output_size = 1,
+    conditional = 0,
+    conditional_size = 21,
     num_layers = 2,
     dropout = 0.3
     ) {
@@ -27,6 +27,11 @@ rnn_model <- nn_module(
 
     # conditional fully connected layer
     if (self$conditional) {
+
+      # construct embedder with the correct
+      # number of classes
+      #self$embedder <- embedding_module(nr_classes)
+
       self$fc1 <- nn_sequential(
         nn_linear(hidden_size + conditional_size, 64),
         nn_relu()
@@ -51,24 +56,36 @@ rnn_model <- nn_module(
       nn_relu()
     )
 
-    self$fc4 = nn_linear(16, output_size)
+    self$fc4 = nn_linear(
+      16,
+      output_size
+      )
   },
 
   forward = function(x, c) {
 
-    out <- self$rnn(x)[[1]] |> torch_squeeze()
+    out <- self$rnn(x)[[1]] #|> torch_squeeze()
 
+    # embedded categorical values
     if (self$conditional) {
-      out <- torch_cat(c(out, c), dim = 1)
+
+      # load embedder
+      embedded <- self$embedder(c)
+
+      # concat the categorical and numeric values
+      #all <- torch_cat(list(embedded, xnum$to(dtype = torch_float())), dim = 2)
+      #out <- torch_cat(c(out, c), dim = 1)
+      # CHECK DIMENSIONS
+      out <- torch::torch_cat(list(xnum$to(dtype = torch_float(), embedded)), dim = 1)
     }
 
-    y <- self$fc1(out) |>
-      self$fc2()|>
-      self$fc3()|>
+    out <- self$fc1(out) |>
+      self$fc2() |>
+      self$fc3() |>
       self$fc4() |>
-      torch_squeeze()
+      torch_squeeze(-1)
 
-    return(y)
+    out
 
   }
 )

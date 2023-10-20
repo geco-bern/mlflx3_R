@@ -44,8 +44,4 @@ mushroom_data <- read_csv(
   select(-`veil-type`)
 
 
-cardinalities <- map(
-  mushroom_data[ , 2:ncol(mushroom_data)], compose(nlevels, as.factor)) %>%
-  keep(function(x) x > 2) %>%
-  unlist() %>%
-  unname()
+

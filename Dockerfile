@@ -16,9 +16,10 @@ RUN /rocker_scripts/install_pandoc.sh
 RUN /rocker_scripts/install_quarto.sh
 RUN /rocker_scripts/install_tidyverse.sh
 
-RUN R -e "install.packages(c('torch', 'luz'),
-                           dependencies = TRUE,
-                           repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages( \
+      c('torch', 'luz', 'torchvision', 'torchaudio'), \
+      dependencies = TRUE, \
+      repos='http://cran.rstudio.com/')"
 RUN R -e "Sys.setenv(CUDA='11.7'); torch::install_torch()"
 
 EXPOSE 8787

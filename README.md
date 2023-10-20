@@ -10,6 +10,13 @@ For reproducible results and portability rocker images should be considered.
 
 https://rocker-project.org/
 
+A custom docker is provided which includes the GPU torch setup
+
+```
+docker build -f custom_ml.Dockerfile -t rocker-torch .
+docker run --gpus all -p 8787:8787 rocker-torch
+```
+
 ```
 # CPU-only
 docker run -p 8787:8787 rocker/ml
@@ -33,3 +40,11 @@ Then force the version to 11.7 (as 11.8 is not yet available).
 Sys.setenv(CUDA="11.7")
 torch::install_torch()
 ```
+
+
+## Mount external volume for running the project
+
+```
+docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd)/work:/home/rstudio/ml_project -e ROOT=TRUE rocker-torch
+```
+
