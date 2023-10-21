@@ -51,11 +51,11 @@ df <- df |>
     ) |>
       recipes::step_center(
         recipes::all_numeric(),
-        -recipes::all_outcomes()
+       -recipes::all_outcomes()
       ) |>
       recipes::step_scale(
         recipes::all_numeric(),
-        -recipes::all_outcomes()
+       -recipes::all_outcomes()
       ) |>
       recipes::step_impute_knn(
         recipes::all_outcomes(),
