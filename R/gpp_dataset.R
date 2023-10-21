@@ -1,3 +1,5 @@
+# Data format routine, queried by the
+# torch data loader
 
 gpp_dataset <- dataset(
     name = "dataset",
