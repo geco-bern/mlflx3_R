@@ -5,6 +5,7 @@ message("Leave-Site-Out routine...")
 # and the torch seed (both function independently)
 set.seed(1)
 torch::torch_manual_seed(42)
+epochs <- 20 # for testing purposes, set to 150 for full run
 
 # required libraries
 library(torch)
@@ -124,7 +125,7 @@ leave_site_out_output <- lapply(sites, function(site){
     ) |>
   fit(
     train_dl,
-    epochs = 150
+    epochs = epochs
     )
 
   # save model for this iteration

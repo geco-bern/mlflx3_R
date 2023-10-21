@@ -81,7 +81,7 @@ leave_site_out_output <- lapply(sites, function(site){
 
   fitted <- try(luz_load(
     file.path(
-      here::here("data/leave_site_out/",
+        here::here("data/leave_site_out_weights/",
                  paste0(site, ".pt"))
     )
   ))
