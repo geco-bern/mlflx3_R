@@ -10,10 +10,6 @@ rnn_model <- nn_module(
     dropout = 0.3
     ) {
 
-    # self sets global variables
-    # across functions after initialize
-    self$conditional <- conditional
-
     # define the lstm section
     self$lstm <-nn_lstm(
         input_size = input_size,
@@ -42,8 +38,7 @@ rnn_model <- nn_module(
 
     # run the lstm squeeze out
     # the additional unity dimension
-    out <- self$lstm(x)[[1]] |>
-     torch_squeeze()
+    out <- self$lstm(x)[[1]]
 
     # stack the normal neural net
     # components on the lstm features
