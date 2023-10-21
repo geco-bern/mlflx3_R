@@ -17,14 +17,20 @@ Summary results / stats...
 
 
 ```{r}
-# read in the data
+# read in the modelled data
 df <- readRDS(here::here("data/leave_site_out_output.rds"))
+
+# read in the original data
+orig <- readRDS(here::here("data/df_imputed.rds"))
+
+# join data
+df <- left_join(df, orig)
 
 # R squared and RMSE global
 statistics_global <- df |>
   summarize(
-    R2 = summary(lm(GPP_pred ~ GPP_obs))$r.squared,
-    RMSE = sqrt(mean((GPP_pred - GPP_obs)^2))
+    R2 = summary(lm(GPP_pred ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2))
   )
 
 print(statistics_global)
@@ -33,8 +39,8 @@ print(statistics_global)
 statistics_sites <- df |>
   group_by(sitename) |>
   summarize(
-    R2 = summary(lm(GPP_pred ~ GPP_obs))$r.squared,
-    RMSE = sqrt(mean((GPP_pred - GPP_obs)^2))
+    R2 = summary(lm(GPP_pred ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2))
   )
 
 print(statistics_sites)
@@ -45,7 +51,7 @@ print(statistics_sites)
 p <- ggplot(df) +
   geom_point(
     aes(
-      GPP_obs,
+      GPP_NT_VUT_REF,
       GPP_pred
     ),
     alpha = 0.2
@@ -66,7 +72,7 @@ print(p)
 p <- ggplot(df) +
   geom_line(
     aes(
-      1:length(GPP_obs),
+      1:length(GPP_NT_VUT_REF),
       GPP_pred
     )
   ) +
