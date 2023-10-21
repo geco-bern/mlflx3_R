@@ -28,7 +28,8 @@ p <- ggplot(df) +
     aes(
       GPP_obs,
       GPP_pred
-    )
+    ),
+    alpha = 0.2
   ) +
   labs(
     x = "GPP observed",
