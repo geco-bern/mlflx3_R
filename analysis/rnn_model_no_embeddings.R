@@ -3,11 +3,9 @@
 rnn_model <- nn_module(
   "Net",
   initialize = function(
-    input_size = 11,
-    hidden_size = 256,
-    output_size = 1,
-    conditional = 0,
-    conditional_size = 21,
+    input_size,
+    hidden_size,
+    output_size,
     num_layers = 2,
     dropout = 0.3
     ) {
@@ -42,8 +40,10 @@ rnn_model <- nn_module(
 
   forward = function(x, c) {
 
-    # run the lstm
-    out <- self$lstm(x)[[1]] #|> torch_squeeze()
+    # run the lstm squeeze out
+    # the additional unity dimension
+    out <- self$lstm(x)[[1]] |>
+     torch_squeeze()
 
     # stack the normal neural net
     # components on the lstm features

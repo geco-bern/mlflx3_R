@@ -1,5 +1,5 @@
 # Feedback on startup
-message("Leave-Site-Out routine...")
+message("Leave-Site-Out routine, generating data...")
 
 # set both the R seed
 # and the torch seed (both function independently)
@@ -10,13 +10,12 @@ torch::torch_manual_seed(42)
 library(torch)
 library(luz)
 library(dplyr)
-source("analysis/rnn_model_no_embeddings.R")
 source("analysis/get_dataset_no_embeddings.R")
 
 # automatically use the GPU if available
 device <- torch::torch_device(
   if (torch::cuda_is_available()) "cuda" else "cpu"
-  )
+)
 
 # read in data, only retain relevant features
 df <- readRDS("data/df_imputed.rds") |>
@@ -45,14 +44,6 @@ sites <- unique(df$sitename)
 # get recycled if not carefully purged
 leave_site_out_output <- lapply(sites, function(site){
 
-  if(file.exists(
-    here::here("data/leave_site_out/",
-               paste0(site, ".pt"))
-  )) {
-    message(sprintf("run completed, skipping %s ...", site))
-    return(NULL)
-  }
-
   # split out leave one site out
   # training and testing data
   train <- df |>
@@ -67,16 +58,9 @@ leave_site_out_output <- lapply(sites, function(site){
       across(
         where(is.numeric),
         list(mean = mean, sd = sd)
-        )
-      ) |>
+      )
+    ) |>
     ungroup()
-
-  # format torch data loader
-  # for training data
-  train_ds <- train |>
-    gpp_dataset(
-      train_center
-    )
 
   # format torch data loader
   # for test data
@@ -88,50 +72,22 @@ leave_site_out_output <- lapply(sites, function(site){
       train_center
     )
 
-  # run data loaders, batch
-  # size is limited to 1 as
-  # the dimensions of the input
-  # should be equal to take advantage
-  # of batch processing (probably due
-  # to underlying matrix optimizations)
-  train_dl <- dataloader(
-    train_ds,
-    batch_size = 1,
-    shuffle = TRUE
-  )
-
   test_dl <- dataloader(
     test_ds,
     batch_size = 1,
     shuffle = TRUE
   )
 
-  # fit the model
-  fitted <- rnn_model |>
-  setup(
-    loss = nn_mse_loss(),
-    optimizer = optim_adam,
-    metrics = list(luz_metric_mae())
-  ) |>
-    set_hparams(
-      input_size = 11,
-      hidden_size = 256,
-      output_size = 1
-    ) |>
-  fit(
-    train_dl,
-    epochs = 150
-    )
-
-  # save model for this iteration
-  # i.e. site left out
-  luz_save(
-    fitted,
+  fitted <- try(luz_load(
     file.path(
       here::here("data/leave_site_out/",
                  paste0(site, ".pt"))
-      )
     )
+  ))
+
+  if(inherits(fitted, 'try-error')){
+    return(NULL)
+  }
 
   # run the model on the test data
   pred <- predict(fitted, test_dl)
