@@ -10,7 +10,7 @@ torch::torch_manual_seed(42)
 library(torch)
 library(luz)
 library(dplyr)
-source("analysis/get_dataset_no_embeddings.R")
+source("R/gpp_dataset.R")
 
 # automatically use the GPU if available
 device <- torch::torch_device(
@@ -21,6 +21,7 @@ device <- torch::torch_device(
 df <- readRDS("data/df_imputed.rds") |>
   dplyr::select(
     'sitename',
+    'date',
     'GPP_NT_VUT_REF',
     'TA_F',
     'SW_IN_F',
@@ -94,15 +95,22 @@ leave_site_out_output <- lapply(sites, function(site){
   pred <- (as.numeric(torch_tensor(pred, device = "cpu")) +
              train_center$GPP_NT_VUT_REF_mean) *
     train_center$GPP_NT_VUT_REF_sd
-  obs <- (as.numeric(torch_tensor(test_ds[1]$y, device = "cpu")) +
-            train_center$GPP_NT_VUT_REF_mean) *
-    train_center$GPP_NT_VUT_REF_sd
+
+  # add date for easy integration in
+  # original data
+  date <- df |>
+    dplyr::filter(
+      sitename == !!site
+    ) |>
+    dplyr::select(
+      date
+    )
 
   # return comparisons
   return(data.frame(
-    GPP_obs = obs,
-    GPP_pred = pred,
-    sitename = site
+    sitename = site,
+    date = date,
+    GPP_pred = pred
   ))
 })
 

@@ -43,4 +43,4 @@ reading of files on your local file system).
 
 ## Running the analysis
 
-
+Analysis are stored in the `analysis` folder and should be run in sequence.

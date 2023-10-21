@@ -1,6 +1,6 @@
-Package: RTemplate
-Title: Your project
-Version: 0.1
+Package: MLFX2
+Title: Machine Learning for fluxes v2
+Version: 2.0
 Authors@R: 
     person(
       given = "John",
@@ -9,7 +9,7 @@ Authors@R:
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0000-0000-0000")
     )
-Description: What the package does (one paragraph).
+Description: Estimate daily GPP values from climatological values using a LSTM.
 License: AGPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
