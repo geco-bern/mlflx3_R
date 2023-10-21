@@ -1,7 +1,12 @@
-# Data format routine, queried by the
-# torch data loader
+#' Data format routine, queried by data loader
+#'
+#' @param x input dataset
+#' @param train_center mean and sd to center the data
+#'
+#' @return torch tensor for model training
+#' @export
 
-gpp_dataset <- dataset(
+gpp_dataset <- torch::dataset(
     name = "dataset",
     initialize = function(
       x,

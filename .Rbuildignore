@@ -4,7 +4,11 @@
 ^pkgdown$
 ^docs$
 ^data-raw$
-^vignettes_add$
+^data$
+^src$
+^analysis$
+Dockerfile
+^manuscript$
 
 # R-markdown files in the root folder.
 ^LICENSE.*$

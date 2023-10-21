@@ -3,7 +3,7 @@ title: "Results"
 author: "Koen Hufkens"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tables}
+  %\VignetteIndexEntry{Results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

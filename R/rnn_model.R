@@ -1,6 +1,15 @@
-# LSTM model
+#' LSTM model
+#'
+#' @param input_size input size (nr of columns with time series drivers)
+#' @param hidden_size the size of the LSTM hidden layers in the module
+#' @param output_size the output size of the model
+#' @param num_layers number of layers in the LSTM module
+#' @param dropout dropout rate of the LSTM module
+#'
+#' @return a bare LSTM model, to be configured and run
+#' @export
 
-rnn_model <- nn_module(
+rnn_model <- torch::nn_module(
   "Net",
   initialize = function(
     input_size,
@@ -11,7 +20,7 @@ rnn_model <- nn_module(
     ) {
 
     # define the lstm section
-    self$lstm <-nn_lstm(
+    self$lstm <-torch::nn_lstm(
         input_size = input_size,
         hidden_size = hidden_size,
         num_layers = num_layers,
@@ -23,14 +32,14 @@ rnn_model <- nn_module(
     # net (can be split into sections using
     # nn_sequential() as in the original python
     # code, but this is cleaner)
-    self$fc <-nn_sequential(
-        nn_linear(hidden_size, 64),
-        nn_relu(),
-        nn_linear(64, 32),
-        nn_relu(),
-        nn_linear(32, 16),
-        nn_relu(),
-        nn_linear(16, output_size)
+    self$fc <-torch::nn_sequential(
+      torch::nn_linear(hidden_size, 64),
+      torch::nn_relu(),
+      torch::nn_linear(64, 32),
+      torch::nn_relu(),
+      torch::nn_linear(32, 16),
+      torch::nn_relu(),
+      torch::nn_linear(16, output_size)
     )
   },
 
@@ -45,6 +54,6 @@ rnn_model <- nn_module(
     # and squeeze the data to comform
     # to the target output shape
     self$fc(out) |>
-      torch_squeeze(-1)
+      torch::torch_squeeze(-1)
   }
 )

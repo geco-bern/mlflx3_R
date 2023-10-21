@@ -10,7 +10,20 @@ Authors@R:
       comment = c(ORCID = "0000-0000-0000-0000")
     )
 Description: Estimate daily GPP values from climatological values using a LSTM.
-License: AGPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.3)
+Imports:
+    torch
+License: AGPL-3
+ByteCompile: true
 RoxygenNote: 7.2.3
+Suggests:
+    rmarkdown,
+    here,
+    ggplot2,
+    dplyr,
+    patchwork,
+    knitr
+VignetteBuilder: knitr
