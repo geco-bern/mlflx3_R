@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your project • RTemplate</title>
+<title>Machine Learning for fluxes v2 • MLFX2</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/apple-touch-icon.png">
@@ -18,8 +18,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,700;1,300;1,400&amp;display=swap" rel="stylesheet">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><!-- geco --><link href="geco.css" rel="stylesheet">
-<meta property="og:title" content="Your project">
-<meta property="og:description" content="What the package does (one paragraph).">
+<meta property="og:title" content="Machine Learning for fluxes v2">
+<meta property="og:description" content="Estimate daily GPP values from climatological values using a LSTM.">
 <meta name="twitter:card" content="summary">
 <!-- Mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js" async integrity="sha256-nlrDrBTHxJJlDDX22AS33xYI1OJHnGMDhiYMSe2U0e0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/config/TeX-AMS-MML_HTMLorMML.js" async integrity="sha256-4zys9A4hMQmtq2EUL+JRoXc0NZi8jVJMzb8onewOaSQ=" crossorigin="anonymous"></script>
 </head>
@@ -45,7 +45,7 @@
         <a class="external-link hidden-md hidden-lg" href="https://geco-group.org/">
           <img src="https://raw.githubusercontent.com/computationales/GECO_template/main/geco_logo_white_small.png" id="hexlogo" alt="GECO"></a>
         <a class="navbar-brand" href="index.html">
-           <i>RTemplate <small>v0.1</small></i>
+           <i>MLFX2 <small>v2.0</small></i>
         </a>
       </div>
     </div>
@@ -54,6 +54,18 @@
       <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/01_results.html">Results</a>
+    </li>
+  </ul>
 </li>
         
       </ul>
@@ -69,37 +81,36 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="torch-ml">Torch ML<a class="anchor" aria-label="anchor" href="#torch-ml"></a>
+<div class="page-header"><h1 id="an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time">An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time<a class="anchor" aria-label="anchor" href="#an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time"></a>
 </h1></div>
-<p>Torch ML time series prediction tests, trying to get to some sort of reproducibility.</p>
-<p>This will be a full port to R, abandoning python and probably optimizing the workflow and ML model for speed while at it.</p>
+<div class="section level2">
+<h2 id="abstract">Abstract:<a class="anchor" aria-label="anchor" href="#abstract"></a>
+</h2>
+<p>Accurate predictions of environmental controls on ecosystem photosynthesis are essential for understanding the impacts of climate change and extreme events on the carbon cycle and the provisioning of ecosystem services. Using time-series measurements of ecosystem fluxes paired with measurements of meteorological variables from a network of globally distributed sites and remotely sensed vegetation indices, we train a recurrent deep neural network (Long-Short-Term Memory, LSTM), a simple deep neural network (DNN), and a mechanistic, theory-based photosynthesis model with the aim to predict ecosystem gross primary production (GPP). We test these models’ ability to spatially and temporally generalise across a wide range of environmental conditions. Both neural network models outperform the theory-based model considering leave-site-out cross-validation (LSOCV). The LSTM model performs best and achieves a mean R2 of 0.78 across sites in the LSOCV and an average R2 of 0.82 across relatively moist temperate and boreal sites. This suggests that recurrent deep neural networks provide a basis for robust data-driven ecosystem photosynthesis modelling in respective biomes. However, limits to global model upscaling are identified using cross-validation by vegetation types and by continents. In particular, our model performance is weakest at relatively arid sites where unknown vegetation exposure to water limitation limits model reliability.</p>
+</div>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
+</div>
 <div class="section level2">
 <h2 id="docker-images">Docker images<a class="anchor" aria-label="anchor" href="#docker-images"></a>
 </h2>
-<p>For reproducible results and portability rocker images should be considered.</p>
-<p><a href="https://rocker-project.org/" class="external-link uri">https://rocker-project.org/</a></p>
-<p>A custom docker is provided which includes the GPU torch setup</p>
-<pre><code>docker build -f custom_ml.Dockerfile -t rocker-torch .
-docker run --gpus all -p 8787:8787 rocker-torch</code></pre>
+<p>A custom docker is provided which includes the GPU torch setup. You can build this docker image using the below command. This will download the NVIDIA CUDA drivers for GPU support, the tidyverse, rstudio IDE and quarto publishing environment. Note that this setup will require some time to build given the the large downloads involved. Once build locally no further downloads will be required.</p>
+<pre><code># In the main project directory
+docker build -f Dockerfile -t rocker-torch .</code></pre>
+<p>To spin up the docker image use:</p>
 <pre><code># CPU-only
-docker run -p 8787:8787 rocker/ml
-# Machines with nvidia-docker and GPU support
-docker run --gpus all -p 8787:8787 rocker/ml</code></pre>
+docker run -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace -p 8787:8787 rocker/ml
+
+# GPU support (NVIDIA)
+docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace rocker-torch</code></pre>
+<p>When in the main R project folder run either the CPU or GPU command to start the docker instance. In any browser use the <a href="http://localhost:8787" class="external-link">http://localhost:8787</a> url to access the docker RStudio Server instance which should be running.</p>
+<p>The password to the RStudio Server instance is set to <code>rstudio</code> when using the above commands (but can and should be changed if the computer is exposed to a larger institutional network). Anyone with the default password will have access to your virtual machine and mounted data. Data will be mounted in the docker virtual machine at <code>/workspace</code> and is fully accessible (writing / reading of files on your local file system).</p>
 </div>
 <div class="section level2">
-<h2 id="torch-install">Torch install<a class="anchor" aria-label="anchor" href="#torch-install"></a>
+<h2 id="running-the-analysis">Running the analysis<a class="anchor" aria-label="anchor" href="#running-the-analysis"></a>
 </h2>
-<p>By default the CUDA install is ignored.</p>
-<p>Install torch using CRAN release</p>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">torch</span><span class="op">)</span></span></code></pre>
-<p>Then force the version to 11.7 (as 11.8 is not yet available).</p>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CUDA<span class="op">=</span><span class="st">"11.7"</span><span class="op">)</span></span>
-<span><span class="fu">torch</span><span class="fu">::</span><span class="fu">install_torch</span><span class="op">(</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="mount-external-volume-for-running-the-project">Mount external volume for running the project<a class="anchor" aria-label="anchor" href="#mount-external-volume-for-running-the-project"></a>
-</h2>
-<pre><code>docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd)/work:/home/rstudio/ml_project -e ROOT=TRUE rocker-torch</code></pre>
+<p>Analysis are stored in the <code>analysis</code> folder and should be run in sequence.</p>
 </div>
 </div>
   </div>
@@ -116,7 +127,7 @@ docker run --gpus all -p 8787:8787 rocker/ml</code></pre>
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing RTemplate</a></li>
+<li><a href="authors.html#citation">Citing MLFX2</a></li>
 </ul>
 </div>
 
