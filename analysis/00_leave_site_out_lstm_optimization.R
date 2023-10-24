@@ -48,6 +48,8 @@ sites <- unique(df$sitename)
 leave_site_out_output <- lapply(sites, function(site){
 
   # check if run was already finished
+  # if sites are skipped run the offline
+  # routine to colate all data
   if(file.exists(
     here::here("data/leave_site_out_weights/",
                paste0(site, ".pt"))
@@ -139,6 +141,8 @@ leave_site_out_output <- lapply(sites, function(site){
     )
 
   # run the model on the test data
+  # model output sits in gpu memory,
+  # export to cpu to mix with R variables
   pred <- predict(fitted, test_dl)
   pred <- (as.numeric(torch_tensor(pred, device = "cpu")) +
              train_center$GPP_NT_VUT_REF_mean) *
