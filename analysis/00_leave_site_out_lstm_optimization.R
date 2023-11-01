@@ -5,7 +5,7 @@ message("Leave-Site-Out routine...")
 # and the torch seed (both function independently)
 set.seed(1)
 torch::torch_manual_seed(42)
-epochs <- 20 # for testing purposes, set to 150 for full run
+epochs <- 150 # for testing purposes, set to 150 for full run
 
 # required libraries
 library(torch)
@@ -17,7 +17,7 @@ source("R/gpp_dataset.R")
 # automatically use the GPU if available
 device <- torch::torch_device(
   if (torch::cuda_is_available()) "cuda" else "cpu"
-  )
+)
 
 # read in data, only retain relevant features
 df <- readRDS("data/df_imputed.rds") |>
@@ -48,6 +48,8 @@ sites <- unique(df$sitename)
 leave_site_out_output <- lapply(sites, function(site){
 
   # check if run was already finished
+  # if sites are skipped run the offline
+  # routine to colate all data
   if(file.exists(
     here::here("data/leave_site_out_weights/",
                paste0(site, ".pt"))
@@ -70,8 +72,8 @@ leave_site_out_output <- lapply(sites, function(site){
       across(
         where(is.numeric),
         list(mean = mean, sd = sd)
-        )
-      ) |>
+      )
+    ) |>
     ungroup()
 
   # format torch data loader
@@ -106,26 +108,26 @@ leave_site_out_output <- lapply(sites, function(site){
   test_dl <- dataloader(
     test_ds,
     batch_size = 1,
-    shuffle = TRUE
+    shuffle = FALSE
   )
 
   # fit the model by defining
   # a setup, setting parameters
   # and then initiating the fitting
   fitted <- rnn_model |>
-  setup(
-    loss = nn_mse_loss(),
-    optimizer = optim_adam,
-    metrics = list(luz_metric_mae())
-  ) |>
+    setup(
+      loss = nn_mse_loss(),
+      optimizer = optim_adam,
+      metrics = list(luz_metric_mae())
+    ) |>
     set_hparams(
       input_size = 11,
       hidden_size = 256,
       output_size = 1
     ) |>
-  fit(
-    train_dl,
-    epochs = epochs
+    fit(
+      train_dl,
+      epochs = epochs
     )
 
   # save model for this iteration
@@ -135,14 +137,14 @@ leave_site_out_output <- lapply(sites, function(site){
     file.path(
       here::here("data/leave_site_out_weights/",
                  paste0(site, ".pt"))
-      )
     )
+  )
 
   # run the model on the test data
+  # model output sits in gpu memory,
+  # export to cpu to mix with R variables
   pred <- predict(fitted, test_dl)
-  pred <- (as.numeric(torch_tensor(pred, device = "cpu")) +
-             train_center$GPP_NT_VUT_REF_mean) *
-    train_center$GPP_NT_VUT_REF_sd
+  pred <- (as.numeric(torch_tensor(pred, device = "cpu")))
 
   # add date for easy integration in
   # original data
