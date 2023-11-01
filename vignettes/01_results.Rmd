@@ -13,7 +13,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
-Summary results / stats...
+Summary results / stats... on a 20 epoch run...
 
 
 ```{r}
@@ -24,7 +24,10 @@ df <- readRDS(here::here("data/leave_site_out_output.rds"))
 orig <- readRDS(here::here("data/df_imputed.rds"))
 
 # join data
-df <- left_join(df, orig)
+df <- left_join(df, orig) |>
+  mutate(
+    date = as.Date(date)
+  )
 
 # R squared and RMSE global
 statistics_global <- df |>
@@ -77,13 +80,13 @@ print(p)
 p <- ggplot(df) +
   geom_line(
     aes(
-      1:length(GPP_NT_VUT_REF),
-      GPP_pred
+      date,
+      GPP_NT_VUT_REF
     )
   ) +
   geom_line(
     aes(
-      1:length(GPP_pred),
+      date,
       GPP_pred
     ),
     col = "red"

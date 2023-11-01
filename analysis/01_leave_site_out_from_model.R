@@ -45,6 +45,9 @@ sites <- unique(df$sitename)
 # get recycled if not carefully purged
 leave_site_out_output <- lapply(sites, function(site){
 
+  # some feedback
+  message(sprintf("Processing: %s", site))
+
   # split out leave one site out
   # training and testing data
   train <- df |>
@@ -76,7 +79,7 @@ leave_site_out_output <- lapply(sites, function(site){
   test_dl <- dataloader(
     test_ds,
     batch_size = 1,
-    shuffle = TRUE
+    shuffle = FALSE
   )
 
   fitted <- try(luz_load(
@@ -92,9 +95,11 @@ leave_site_out_output <- lapply(sites, function(site){
 
   # run the model on the test data
   pred <- predict(fitted, test_dl)
-  pred <- (as.numeric(torch_tensor(pred, device = "cpu")) +
-             train_center$GPP_NT_VUT_REF_mean) *
-    train_center$GPP_NT_VUT_REF_sd
+
+  # back convert centered data (should not be necessary update runs)
+  train_mean <- train_center$GPP_NT_VUT_REF_mean
+  train_sd <- train_center$GPP_NT_VUT_REF_sd
+  pred <- (as.numeric(torch_tensor(pred, device = "cpu")) * train_sd) + train_mean
 
   # add date for easy integration in
   # original data
@@ -110,7 +115,9 @@ leave_site_out_output <- lapply(sites, function(site){
   return(data.frame(
     sitename = site,
     date = date,
-    GPP_pred = pred
+    GPP_pred = pred,
+    GPP_mean = train_mean,
+    GPP_sd = train_sd
   ))
 })
 
