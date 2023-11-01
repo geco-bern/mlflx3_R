@@ -90,7 +90,7 @@ Hufkens</h4>
             
       
       
-      <div class="hidden name"><code>01_results.Rmd</code></div>
+      <div class="hidden name"><code>02_original_results.Rmd</code></div>
 
     </div>
 
@@ -99,53 +99,46 @@ Hufkens</h4>
 <p>Summary results / stats…</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read in the modelled data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/leave_site_out_output.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/LSTM_nocondition_results_apr22.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># read in the original data</span></span>
-<span><span class="va">orig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/df_imputed.rds"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># join data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">df</span>, <span class="va">orig</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># R squared and RMSE global</span></span>
+<span><span class="co"># R squared and RMSE global</span></span>
 <span><span class="va">statistics_global</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarize</span><span class="op">(</span></span>
-<span>    R2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    R2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
+<span>    RMSE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    MAE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">statistics_global</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          R2     RMSE      MAE</span></span>
-<span><span class="co">## 1 0.7343552 11.87439 11.69607</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">##          R2     RMSE       MAE</span></span>
+<span><span class="co">## 1 0.8157376 1.742591 0.1921107</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># R squared and RMSE by site</span></span>
 <span><span class="va">statistics_sites</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">sitename</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarize</span><span class="op">(</span></span>
-<span>    R2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    R2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
+<span>    RMSE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    MAE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">lstm_cond0</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">statistics_sites</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 53 × 4</span></span></span>
-<span><span class="co">##    sitename     R2  RMSE   MAE</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> AU-ASM   0.624  11.5  11.5 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> AU-DaP   0.681  12.9  12.7 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> AU-DaS   0.528   9.86  9.74</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> AU-Fog   0.568  14.1  14.1 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> AU-How   0.475  11.8  11.7 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> AU-Stp   0.602  12.4  12.4 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AU-Whr   0.021<span style="text-decoration: underline;">3</span> 10.5  10.3 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> AU-Wom   0.764  13.3  13.1 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> BE-Bra   0.811  12.4  12.3 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> BE-Vie   0.840  11.5  11.4 </span></span>
+<span><span class="co">##    sitename    R2  RMSE    MAE</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> AU-ASM   0.859 0.498 0.143 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> AU-DaP   0.811 1.94  0.777 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> AU-DaS   0.500 1.60  0.350 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> AU-Fog   0.731 0.804 0.111 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> AU-How   0.623 1.58  0.128 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> AU-Stp   0.781 0.760 0.172 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AU-Whr   0.504 1.02  0.480 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> AU-Wom   0.734 1.36  0.246 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> BE-Bra   0.809 1.48  0.222 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> BE-Vie   0.882 1.32  0.010<span style="text-decoration: underline;">4</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 43 more rows</span></span></span></code></pre>
-<p><img src="01_results_files/figure-html/unnamed-chunk-3-1.png" width="1344"></p>
-<p><img src="01_results_files/figure-html/unnamed-chunk-4-1.png" width="1344"></p>
+<p><img src="02_original_results_files/figure-html/unnamed-chunk-3-1.png" width="1344"></p>
+<p><img src="02_original_results_files/figure-html/unnamed-chunk-4-1.png" width="1344"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
