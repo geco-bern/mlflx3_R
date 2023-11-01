@@ -17,16 +17,16 @@ rnn_model <- torch::nn_module(
     output_size,
     num_layers = 2,
     dropout = 0.3
-    ) {
+  ) {
 
     # define the lstm section
     self$lstm <-torch::nn_lstm(
-        input_size = input_size,
-        hidden_size = hidden_size,
-        num_layers = num_layers,
-        dropout = dropout,
-        batch_first = TRUE
-      )
+      input_size = input_size,
+      hidden_size = hidden_size,
+      num_layers = num_layers,
+      dropout = dropout,
+      batch_first = TRUE
+    )
 
     # The fully connected standard neural
     # net (can be split into sections using
@@ -43,7 +43,7 @@ rnn_model <- torch::nn_module(
     )
   },
 
-  forward = function(x, c) {
+  forward = function(x) {
 
     # run the lstm squeeze out
     # the additional unity dimension
