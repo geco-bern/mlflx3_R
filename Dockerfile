@@ -16,11 +16,13 @@ RUN /rocker_scripts/install_pandoc.sh
 RUN /rocker_scripts/install_quarto.sh
 RUN /rocker_scripts/install_tidyverse.sh
 
+RUN apt update && apt install -y libprotobuf-dev libmagick++-dev libavfilter-dev
+
 RUN R -e "install.packages( \
       c('torch', 'luz', 'torchvision', 'torchaudio'), \
       dependencies = TRUE, \
       repos='http://cran.rstudio.com/')"
-RUN R -e "Sys.setenv(CUDA='11.7'); torch::install_torch()"
+RUN R -e "Sys.setenv(CUDA='11.7'); torch::install_torch(); quit('no')"
 
 EXPOSE 8787
 
