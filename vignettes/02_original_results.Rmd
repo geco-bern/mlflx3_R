@@ -1,0 +1,95 @@
+---
+title: "Results"
+author: "Koen Hufkens"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include = FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+Summary results / stats...
+
+
+```{r}
+# read in the modelled data
+df <- read.csv(here::here("data/LSTM_nocondition_results_apr22.csv"))
+
+# R squared and RMSE global
+statistics_global <- df |>
+  summarize(
+    R2 = summary(lm(lstm_cond0 ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE = sqrt(mean((lstm_cond0 - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE = abs(mean((lstm_cond0 - GPP_NT_VUT_REF), na.rm = TRUE))
+  )
+
+print(statistics_global)
+
+# R squared and RMSE by site
+statistics_sites <- df |>
+  group_by(sitename) |>
+  summarize(
+    R2 = summary(lm(lstm_cond0 ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE = sqrt(mean((lstm_cond0 - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE = abs(mean((lstm_cond0 - GPP_NT_VUT_REF), na.rm = TRUE))
+  )
+
+print(statistics_sites)
+```
+
+```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
+# plot all validation graphs
+p <- ggplot(df) +
+  geom_point(
+    aes(
+      GPP_NT_VUT_REF,
+      lstm_cond0
+    ),
+    alpha = 0.2
+  ) +
+  labs(
+    x = "GPP observed",
+    y = "GPP predicted"
+  ) +
+  geom_abline() +
+  theme_bw() +
+  facet_wrap(~sitename, ncol = 4)
+
+print(p)
+```
+
+```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
+# plot all validation graphs
+p <- ggplot(df) +
+  geom_line(
+    aes(
+      1:length(GPP_NT_VUT_REF),
+      lstm_cond0
+    )
+  ) +
+  geom_line(
+    aes(
+      1:length(lstm_cond0),
+      lstm_cond0
+    ),
+    col = "red"
+  ) +
+  labs(
+    x = "GPP observed",
+    y = "GPP predicted"
+  ) +
+  theme_bw() +
+  facet_wrap(
+    ~sitename,
+    scales = "free",
+    ncol = 4
+  )
+
+print(p)
+```
+

@@ -30,7 +30,8 @@ df <- left_join(df, orig)
 statistics_global <- df |>
   summarize(
     R2 = summary(lm(GPP_pred ~ GPP_NT_VUT_REF))$r.squared,
-    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2))
+    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE = abs(mean((GPP_pred - GPP_NT_VUT_REF), na.rm = TRUE))
   )
 
 print(statistics_global)
@@ -40,13 +41,14 @@ statistics_sites <- df |>
   group_by(sitename) |>
   summarize(
     R2 = summary(lm(GPP_pred ~ GPP_NT_VUT_REF))$r.squared,
-    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2))
+    RMSE = sqrt(mean((GPP_pred - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE = abs(mean((GPP_pred - GPP_NT_VUT_REF), na.rm = TRUE))
   )
 
 print(statistics_sites)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
 # plot all validation graphs
 p <- ggplot(df) +
   geom_point(
@@ -62,12 +64,15 @@ p <- ggplot(df) +
   ) +
   geom_abline() +
   theme_bw() +
-  facet_wrap(~sitename)
+  facet_wrap(
+    ~sitename,
+    ncol = 4
+    )
 
 print(p)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
 # plot all validation graphs
 p <- ggplot(df) +
   geom_line(
@@ -88,8 +93,11 @@ p <- ggplot(df) +
     y = "GPP predicted"
   ) +
   theme_bw() +
-  facet_wrap(~sitename,
-             scales = "free")
+  facet_wrap(
+    ~sitename,
+    scales = "free",
+    ncol = 4
+    )
 
 print(p)
 ```
