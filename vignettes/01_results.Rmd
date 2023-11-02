@@ -11,11 +11,12 @@ vignette: >
 ```{r include = FALSE}
 library(dplyr)
 library(ggplot2)
+library(reactable)
 ```
 
 > Summary results / stats... 20 epochs for the LSTM (to be updated), 150 epochs FCN.
 
-```{r}
+```{r echo = FALSE}
 # read in the modelled data
 df_lstm <- readRDS(here::here("data/leave_site_out_output_lstm.rds")) |>
   rename(
@@ -45,10 +46,13 @@ statistics_global <- df |>
     R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
-  )
+  ) |>
+  round(3)
 
-print(statistics_global)
+reactable::reactable(statistics_global)
+```
 
+```{r echo = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
   group_by(sitename) |>
@@ -59,9 +63,14 @@ statistics_sites <- df |>
     R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
+  ) |>
+  mutate(
+    across(where(is.double),
+    round,
+    3)
   )
 
-print(statistics_sites)
+reactable::reactable(statistics_sites)
 ```
 
 ```{r echo = FALSE, warning=FALSE}
@@ -129,8 +138,8 @@ p <- ggplot(df) +
     col = "green"
   ) +
   labs(
-    x = "GPP observed",
-    y = "GPP predicted"
+    x = "Date",
+    y = "GPP"
   ) +
   theme_bw() +
   facet_wrap(

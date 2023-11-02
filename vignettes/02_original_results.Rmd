@@ -13,10 +13,9 @@ library(dplyr)
 library(ggplot2)
 ```
 
-Summary results / stats...
+Original stats
 
-
-```{r}
+```{r echo = FALSE}
 # read in the modelled data
 df <- read.csv(here::here("data/LSTM_nocondition_results_apr22.csv")) |>
   mutate(
@@ -29,10 +28,13 @@ statistics_global <- df |>
     R2 = summary(lm(lstm_cond0 ~ GPP_NT_VUT_REF))$r.squared,
     RMSE = sqrt(mean((lstm_cond0 - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE = abs(mean((lstm_cond0 - GPP_NT_VUT_REF), na.rm = TRUE))
-  )
+  ) |>
+  round(3)
 
-print(statistics_global)
+reactable::reactable(statistics_global)
+```
 
+```{r echo = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
   group_by(sitename) |>
@@ -40,9 +42,15 @@ statistics_sites <- df |>
     R2 = summary(lm(lstm_cond0 ~ GPP_NT_VUT_REF))$r.squared,
     RMSE = sqrt(mean((lstm_cond0 - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE = abs(mean((lstm_cond0 - GPP_NT_VUT_REF), na.rm = TRUE))
+  )  |>
+  mutate(
+    across(where(is.double),
+    round,
+    3)
   )
 
-print(statistics_sites)
+reactable::reactable(statistics_sites)
+
 ```
 
 ```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
@@ -83,8 +91,8 @@ p <- ggplot(df) +
     col = "red"
   ) +
   labs(
-    x = "",
-    y = "GPP predicted"
+    x = "Date",
+    y = "GPP"
   ) +
   theme_bw() +
   facet_wrap(

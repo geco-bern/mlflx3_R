@@ -15,7 +15,8 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.3)
 Imports:
-    torch
+    torch,
+    dplyr
 License: AGPL-3
 ByteCompile: true
 RoxygenNote: 7.2.3
@@ -23,8 +24,8 @@ Suggests:
     rmarkdown,
     here,
     ggplot2,
-    dplyr,
     patchwork,
     knitr,
-    tidyr
+    tidyr,
+    reactable
 VignetteBuilder: knitr
