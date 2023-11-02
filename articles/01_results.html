@@ -81,7 +81,8 @@
 
       
 
-      </header><div class="row">
+      </header><script src="01_results_files/core-js-2.5.3/shim.min.js"></script><script src="01_results_files/react-18.2.0/react.min.js"></script><script src="01_results_files/react-18.2.0/react-dom.min.js"></script><script src="01_results_files/reactwidget-1.0.0/react-tools.js"></script><script src="01_results_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><link href="01_results_files/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="01_results_files/reactable-binding-0.4.4/reactable.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Results</h1>
@@ -100,76 +101,25 @@ Hufkens</h4>
 <p>Summary results / stats… 20 epochs for the LSTM (to be updated), 150
 epochs FCN.</p>
 </blockquote>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># read in the modelled data</span></span>
-<span><span class="va">df_lstm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/leave_site_out_output_lstm.rds"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rename</span><span class="op">(</span></span>
-<span>    <span class="st">"GPP_pred_lstm"</span> <span class="op">=</span> <span class="st">"GPP_pred"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="va">df_fcn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/leave_site_out_output_fcn.rds"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rename</span><span class="op">(</span></span>
-<span>    <span class="st">"GPP_pred_fcn"</span> <span class="op">=</span> <span class="st">"GPP_pred"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># read in the original data</span></span>
-<span><span class="va">orig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/df_imputed.rds"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># join data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">df_lstm</span>, <span class="va">df_fcn</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">df</span>, <span class="va">orig</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># R squared and RMSE global</span></span>
-<span><span class="va">statistics_global</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">summarize</span><span class="op">(</span></span>
-<span>    R2_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    R2_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">statistics_global</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##     R2_lstm RMSE_lstm   MAE_lstm    R2_fcn RMSE_fcn  MAE_fcn</span></span>
-<span><span class="co">## 1 0.7043553  2.183057 0.01363277 0.7396445 2.030596 0.173568</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># R squared and RMSE by site</span></span>
-<span><span class="va">statistics_sites</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">sitename</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">summarize</span><span class="op">(</span></span>
-<span>    R2_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE_lstm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_lstm</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    R2_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">~</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span>,</span>
-<span>    RMSE_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    MAE_fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">GPP_pred_fcn</span> <span class="op">-</span> <span class="va">GPP_NT_VUT_REF</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">statistics_sites</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 41 × 7</span></span></span>
-<span><span class="co">##    sitename R2_lstm RMSE_lstm MAE_lstm R2_fcn RMSE_fcn MAE_fcn</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> AU-ASM     0.691     0.720   0.376   0.654    0.649   0.125</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> AU-DaP     0.692     2.26    0.346   0.704    2.45    1.18 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> AU-DaS     0.412     1.87    0.834   0.495    1.75    0.582</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> AU-Fog     0.678     2.20    1.70    0.611    1.81    1.13 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> AU-How     0.552     1.98    1.09    0.442    1.87    0.286</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> AU-Stp     0.648     1.11    0.543   0.603    1.13    0.372</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AU-Whr     0.135     1.65    1.14    0.149    1.49    0.449</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> AU-Wom     0.690     1.88    0.185   0.804    1.66    0.767</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> BE-Bra     0.771     1.80    0.358   0.776    1.64    0.109</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> BE-Vie     0.889     1.35    0.023<span style="text-decoration: underline;">5</span>  0.854    1.62    0.604</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 31 more rows</span></span></span></code></pre>
-<pre><code><span><span class="co">## `summarise()` has grouped output by 'doy'. You can override using the `.groups`</span></span>
+<pre><code><span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span>
+<span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span></code></pre>
+<div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4df72eab70ac0fc5479d" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4df72eab70ac0fc5479d">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"R2_lstm":[0.704],"RMSE_lstm":[2.183],"MAE_lstm":[0.014],"R2_fcn":[0.74],"RMSE_fcn":[2.031],"MAE_fcn":[0.174]},"columns":[{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"92c7ace04963623e4c9361d1dab083b2"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><pre><code><span><span class="co">## Warning: There was 1 warning in `mutate()`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `across(where(is.double), round, 3)`.</span></span>
+<span><span class="co">## Caused by warning:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> The `...` argument of `across()` is deprecated as of dplyr 1.1.0.</span></span>
+<span><span class="co">## Supply arguments directly to `.fns` through an anonymous function instead.</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   # Previously</span></span>
+<span><span class="co">##   across(a:b, mean, na.rm = TRUE)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   # Now</span></span>
+<span><span class="co">##   across(a:b, \(x) mean(x, na.rm = TRUE))</span></span></code></pre>
+<div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-fe5ff1d0cc7ab82b1f44" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-fe5ff1d0cc7ab82b1f44">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"sitename":["AU-ASM","AU-DaP","AU-DaS","AU-Fog","AU-How","AU-Stp","AU-Whr","AU-Wom","BE-Bra","BE-Vie","CH-Fru","CH-Lae","CH-Oe1","CN-Qia","CZ-wet","DE-Geb","DE-Gri","DE-Hai","DE-Kli","DE-Obe","DE-RuR","DE-Spw","DE-Tha","DK-Sor","FI-Hyy","FI-Sod","FR-Fon","FR-LBr","FR-Pue","IT-Cp2","IT-Isp","IT-Lav","IT-MBo","IT-Noe","IT-PT1","IT-SR2","IT-SRo","IT-Tor","JP-SMF","NL-Hor","NL-Loo"],"R2_lstm":[0.691,0.692,0.412,0.678,0.552,0.648,0.135,0.69,0.771,0.889,0.837,0.707,0.577,0.744,0.7,0.658,0.775,0.89,0.603,0.863,0.823,0.881,0.846,0.905,0.917,0.713,0.872,0.718,0.599,0.503,0.817,0.752,0.843,0.26,0.868,0.8,0.614,0.834,0.745,0.8,0.85],"RMSE_lstm":[0.72,2.26,1.867,2.205,1.98,1.115,1.65,1.879,1.8,1.354,2.22,2.774,3.2,1.781,2.597,2.691,2.078,1.843,2.771,1.811,1.741,2.001,1.979,3.705,1.707,1.315,1.933,1.876,2.281,1.536,3.046,2.355,1.856,3.639,1.764,1.792,1.905,2.549,1.449,1.616,1.295],"MAE_lstm":[0.376,0.346,0.834,1.699,1.088,0.543,1.141,0.185,0.358,0.023,0.583,0.865,0.856,1.074,1.276,0.023,0.437,0.1,0.358,0.565,0.361,0.77,1.009,2.075,0.741,0.456,0.144,0.055,1.504,0.201,1.211,1.001,0.518,2.506,0.296,0.635,0.457,1.976,0.256,0.203,0.046],"R2_fcn":[0.654,0.704,0.495,0.611,0.442,0.603,0.149,0.804,0.776,0.854,0.813,0.686,0.676,0.811,0.79,0.69,0.793,0.877,0.693,0.86,0.794,0.916,0.87,0.896,0.898,0.68,0.843,0.726,0.527,0.564,0.838,0.798,0.858,0.517,0.872,0.829,0.627,0.85,0.734,0.83,0.792],"RMSE_fcn":[0.649,2.447,1.747,1.814,1.868,1.128,1.485,1.655,1.635,1.618,2.587,2.414,2.655,1.268,1.891,2.753,1.894,2.045,2.412,2.098,1.739,1.893,2.139,3.16,1.119,1.38,2.232,1.736,2.837,2.319,3.145,1.909,1.718,1.739,2.64,1.437,1.967,1.307,1.537,1.484,1.524],"MAE_fcn":[0.125,1.179,0.582,1.126,0.286,0.372,0.449,0.767,0.109,0.604,1.06,0.406,0.977,0.165,0.664,0.284,0.133,0.252,0.132,1.049,0.13,0.849,1.302,1.728,0.163,0.477,0.185,0.652,2.142,1.095,1.537,0.557,0.466,1.052,1.453,0.26,0.29,0.174,0.446,0.058,0.438]},"columns":[{"id":"sitename","name":"sitename","type":"character"},{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"8a618f880b83415606a298b6377490f8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><pre><code><span><span class="co">## `summarise()` has grouped output by 'doy'. You can override using the `.groups`</span></span>
 <span><span class="co">## argument.</span></span></code></pre>
-<p><img src="01_results_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p><img src="01_results_files/figure-html/unnamed-chunk-4-1.png" width="1344"></p>
+<p><img src="01_results_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="01_results_files/figure-html/unnamed-chunk-5-1.png" width="1344"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
