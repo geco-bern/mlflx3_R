@@ -103,10 +103,10 @@
 docker build -f Dockerfile -t rocker-torch .</code></pre>
 <p>To spin up the docker image use:</p>
 <pre><code># CPU-only
-docker run -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace -p 8787:8787 rocker/ml
+docker run -e PASSWORD="rstudio" -p 5656:5656 -v $(pwd):/workspace -p 8787:8787 rocker/ml
 
 # GPU support (NVIDIA)
-docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace rocker-torch</code></pre>
+docker run --gpus all -e PASSWORD="rstudio" -p 5656:5656 -v $(pwd):/workspace rocker-torch</code></pre>
 <p>When in the main R project folder run either the CPU or GPU command to start the docker instance. In any browser use the <a href="http://localhost:8787" class="external-link">http://localhost:8787</a> url to access the docker RStudio Server instance which should be running.</p>
 <p>The password to the RStudio Server instance is set to <code>rstudio</code> when using the above commands (but can and should be changed if the computer is exposed to a larger institutional network). Anyone with the default password will have access to your virtual machine and mounted data. Data will be mounted in the docker virtual machine at <code>/workspace</code> and is fully accessible (writing / reading of files on your local file system).</p>
 </div>
