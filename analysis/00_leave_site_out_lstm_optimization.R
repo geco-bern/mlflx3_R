@@ -118,7 +118,7 @@ leave_site_out_output <- lapply(sites, function(site){
     setup(
       loss = nn_mse_loss(),
       optimizer = optim_adam,
-      metrics = list(luz_metric_mae())
+      metrics = list(luz_metric_mse())
     ) |>
     set_hparams(
       input_size = 11,
