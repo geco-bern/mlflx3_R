@@ -1,5 +1,5 @@
 # Feedback on startup
-message("Leave-Site-Out routine, generating data...")
+message("Leave-Site-Out routine, generating data from LSTM and FCN models...")
 
 # set both the R seed
 # and the torch seed (both function independently)
@@ -16,6 +16,8 @@ source("R/gpp_dataset.R")
 device <- torch::torch_device(
   if (torch::cuda_is_available()) "cuda" else "cpu"
 )
+
+#--- LSTM ----
 
 # read in data, only retain relevant features
 df <- readRDS("data/df_imputed.rds") |>
@@ -84,7 +86,7 @@ leave_site_out_output <- lapply(sites, function(site){
 
   fitted <- try(luz_load(
     file.path(
-        here::here("data/leave_site_out_weights/",
+        here::here("data/leave_site_out_weights_lstm/",
                  paste0(site, ".pt"))
     )
   ))
@@ -94,12 +96,7 @@ leave_site_out_output <- lapply(sites, function(site){
   }
 
   # run the model on the test data
-  pred <- as.numeric(predict(fitted, test_dl))
-
-  # back convert centered data (should not be necessary update runs)
-  #train_mean <- train_center$GPP_NT_VUT_REF_mean
-  #train_sd <- train_center$GPP_NT_VUT_REF_sd
-  #pred <- (pred * train_sd) + train_mean
+  pred <- as.numeric(torch_tensor(predict(fitted, test_dl), device = "cpu"))
 
   # add date for easy integration in
   # original data
@@ -125,6 +122,93 @@ leave_site_out_output <- bind_rows(leave_site_out_output)
 # save as a compressed RDS
 saveRDS(
   leave_site_out_output,
-  "data/leave_site_out_output.rds",
+  "data/leave_site_out_output_lstm.rds",
+  compress = "xz"
+)
+
+#--- FCN ----
+
+# loop over all sites (drop the one mentioned)
+# use a lapply rather than a for loop as lapply
+# does not create global variables which might
+# get recycled if not carefully purged
+leave_site_out_output <- lapply(sites, function(site){
+
+  # some feedback
+  message(sprintf("Processing: %s", site))
+
+  # split out leave one site out
+  # training and testing data
+  train <- df |>
+    dplyr::filter(
+      sitename != !!site
+    )
+
+  # calculated mean / sd to center
+  # the data
+  train_center <- train |>
+    summarise(
+      across(
+        where(is.numeric),
+        list(mean = mean, sd = sd)
+      )
+    ) |>
+    ungroup()
+
+  # format torch data loader
+  # for test data
+  test_ds <- df |>
+    dplyr::filter(
+      sitename == !!site
+    ) |>
+    gpp_dataset(
+      train_center
+    )
+
+  test_dl <- dataloader(
+    test_ds,
+    batch_size = 1,
+    shuffle = FALSE
+  )
+
+  fitted <- try(luz_load(
+    file.path(
+      here::here("data/leave_site_out_weights_fcn/",
+                 paste0(site, ".pt"))
+    )
+  ))
+
+  if(inherits(fitted, 'try-error')){
+    return(NULL)
+  }
+
+  # run the model on the test data
+  pred <- as.numeric(torch_tensor(predict(fitted, test_dl), device = "cpu"))
+
+  # add date for easy integration in
+  # original data
+  date <- df |>
+    dplyr::filter(
+      sitename == !!site
+    ) |>
+    dplyr::select(
+      date
+    )
+
+  # return comparisons
+  return(data.frame(
+    sitename = site,
+    date = date,
+    GPP_pred = pred
+  ))
+})
+
+# compile everything in a tidy dataframe
+leave_site_out_output <- bind_rows(leave_site_out_output)
+
+# save as a compressed RDS
+saveRDS(
+  leave_site_out_output,
+  "data/leave_site_out_output_fcn.rds",
   compress = "xz"
 )
