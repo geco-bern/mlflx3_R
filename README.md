@@ -24,10 +24,10 @@ To spin up the docker image use:
 
 ```
 # CPU-only
-docker run -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace -p 8787:8787 rocker/ml
+docker run -e PASSWORD="rstudio" -p 5656:5656 -v $(pwd):/workspace -p 8787:8787 rocker/ml
 
 # GPU support (NVIDIA)
-docker run --gpus all -e PASSWORD="rstudio" -p 8787:8787 -v $(pwd):/workspace rocker-torch
+docker run --gpus all -e PASSWORD="rstudio" -p 5656:5656 -v $(pwd):/workspace rocker-torch
 ```
 
 When in the main R project folder run either the CPU or GPU command to start
