@@ -70,7 +70,12 @@
     </li>
   </ul>
 </li>
-        
+        <li>
+  <a href="https://github.com/geco-bern/mlfx2_R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
 </div>
 <!--/.nav-collapse -->
@@ -90,7 +95,7 @@
 Hufkens</h4>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/geco-bern/mlfx2_R/blob/HEAD/vignettes/01_results.Rmd" class="external-link"><code>vignettes/01_results.Rmd</code></a></small>
       <div class="hidden name"><code>01_results.Rmd</code></div>
 
     </div>
@@ -101,22 +106,9 @@ Hufkens</h4>
 <p>Summary results / stats… 20 epochs for the LSTM (to be updated), 150
 epochs FCN.</p>
 </blockquote>
-<pre><code><span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span>
-<span><span class="co">## Joining with `by = join_by(sitename, date)`</span></span></code></pre>
-<div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4df72eab70ac0fc5479d" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-4df72eab70ac0fc5479d">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"R2_lstm":[0.704],"RMSE_lstm":[2.183],"MAE_lstm":[0.014],"R2_fcn":[0.74],"RMSE_fcn":[2.031],"MAE_fcn":[0.174]},"columns":[{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"92c7ace04963623e4c9361d1dab083b2"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><pre><code><span><span class="co">## Warning: There was 1 warning in `mutate()`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `across(where(is.double), round, 3)`.</span></span>
-<span><span class="co">## Caused by warning:</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> The `...` argument of `across()` is deprecated as of dplyr 1.1.0.</span></span>
-<span><span class="co">## Supply arguments directly to `.fns` through an anonymous function instead.</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   # Previously</span></span>
-<span><span class="co">##   across(a:b, mean, na.rm = TRUE)</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   # Now</span></span>
-<span><span class="co">##   across(a:b, \(x) mean(x, na.rm = TRUE))</span></span></code></pre>
-<div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-fe5ff1d0cc7ab82b1f44" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-fe5ff1d0cc7ab82b1f44">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"sitename":["AU-ASM","AU-DaP","AU-DaS","AU-Fog","AU-How","AU-Stp","AU-Whr","AU-Wom","BE-Bra","BE-Vie","CH-Fru","CH-Lae","CH-Oe1","CN-Qia","CZ-wet","DE-Geb","DE-Gri","DE-Hai","DE-Kli","DE-Obe","DE-RuR","DE-Spw","DE-Tha","DK-Sor","FI-Hyy","FI-Sod","FR-Fon","FR-LBr","FR-Pue","IT-Cp2","IT-Isp","IT-Lav","IT-MBo","IT-Noe","IT-PT1","IT-SR2","IT-SRo","IT-Tor","JP-SMF","NL-Hor","NL-Loo"],"R2_lstm":[0.691,0.692,0.412,0.678,0.552,0.648,0.135,0.69,0.771,0.889,0.837,0.707,0.577,0.744,0.7,0.658,0.775,0.89,0.603,0.863,0.823,0.881,0.846,0.905,0.917,0.713,0.872,0.718,0.599,0.503,0.817,0.752,0.843,0.26,0.868,0.8,0.614,0.834,0.745,0.8,0.85],"RMSE_lstm":[0.72,2.26,1.867,2.205,1.98,1.115,1.65,1.879,1.8,1.354,2.22,2.774,3.2,1.781,2.597,2.691,2.078,1.843,2.771,1.811,1.741,2.001,1.979,3.705,1.707,1.315,1.933,1.876,2.281,1.536,3.046,2.355,1.856,3.639,1.764,1.792,1.905,2.549,1.449,1.616,1.295],"MAE_lstm":[0.376,0.346,0.834,1.699,1.088,0.543,1.141,0.185,0.358,0.023,0.583,0.865,0.856,1.074,1.276,0.023,0.437,0.1,0.358,0.565,0.361,0.77,1.009,2.075,0.741,0.456,0.144,0.055,1.504,0.201,1.211,1.001,0.518,2.506,0.296,0.635,0.457,1.976,0.256,0.203,0.046],"R2_fcn":[0.654,0.704,0.495,0.611,0.442,0.603,0.149,0.804,0.776,0.854,0.813,0.686,0.676,0.811,0.79,0.69,0.793,0.877,0.693,0.86,0.794,0.916,0.87,0.896,0.898,0.68,0.843,0.726,0.527,0.564,0.838,0.798,0.858,0.517,0.872,0.829,0.627,0.85,0.734,0.83,0.792],"RMSE_fcn":[0.649,2.447,1.747,1.814,1.868,1.128,1.485,1.655,1.635,1.618,2.587,2.414,2.655,1.268,1.891,2.753,1.894,2.045,2.412,2.098,1.739,1.893,2.139,3.16,1.119,1.38,2.232,1.736,2.837,2.319,3.145,1.909,1.718,1.739,2.64,1.437,1.967,1.307,1.537,1.484,1.524],"MAE_fcn":[0.125,1.179,0.582,1.126,0.286,0.372,0.449,0.767,0.109,0.604,1.06,0.406,0.977,0.165,0.664,0.284,0.133,0.252,0.132,1.049,0.13,0.849,1.302,1.728,0.163,0.477,0.185,0.652,2.142,1.095,1.537,0.557,0.466,1.052,1.453,0.26,0.29,0.174,0.446,0.058,0.438]},"columns":[{"id":"sitename","name":"sitename","type":"character"},{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"8a618f880b83415606a298b6377490f8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><pre><code><span><span class="co">## `summarise()` has grouped output by 'doy'. You can override using the `.groups`</span></span>
+<div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e45a87040ce445c7da84" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e45a87040ce445c7da84">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"R2_lstm":[0.704],"RMSE_lstm":[2.183],"MAE_lstm":[0.014],"R2_fcn":[0.74],"RMSE_fcn":[2.031],"MAE_fcn":[0.174]},"columns":[{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"92c7ace04963623e4c9361d1dab083b2"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><div class="reactable html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f3130cd00043ec56f78f" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f3130cd00043ec56f78f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"sitename":["AU-ASM","AU-DaP","AU-DaS","AU-Fog","AU-How","AU-Stp","AU-Whr","AU-Wom","BE-Bra","BE-Vie","CH-Fru","CH-Lae","CH-Oe1","CN-Qia","CZ-wet","DE-Geb","DE-Gri","DE-Hai","DE-Kli","DE-Obe","DE-RuR","DE-Spw","DE-Tha","DK-Sor","FI-Hyy","FI-Sod","FR-Fon","FR-LBr","FR-Pue","IT-Cp2","IT-Isp","IT-Lav","IT-MBo","IT-Noe","IT-PT1","IT-SR2","IT-SRo","IT-Tor","JP-SMF","NL-Hor","NL-Loo"],"R2_lstm":[0.691,0.692,0.412,0.678,0.552,0.648,0.135,0.69,0.771,0.889,0.837,0.707,0.577,0.744,0.7,0.658,0.775,0.89,0.603,0.863,0.823,0.881,0.846,0.905,0.917,0.713,0.872,0.718,0.599,0.503,0.817,0.752,0.843,0.26,0.868,0.8,0.614,0.834,0.745,0.8,0.85],"RMSE_lstm":[0.72,2.26,1.867,2.205,1.98,1.115,1.65,1.879,1.8,1.354,2.22,2.774,3.2,1.781,2.597,2.691,2.078,1.843,2.771,1.811,1.741,2.001,1.979,3.705,1.707,1.315,1.933,1.876,2.281,1.536,3.046,2.355,1.856,3.639,1.764,1.792,1.905,2.549,1.449,1.616,1.295],"MAE_lstm":[0.376,0.346,0.834,1.699,1.088,0.543,1.141,0.185,0.358,0.023,0.583,0.865,0.856,1.074,1.276,0.023,0.437,0.1,0.358,0.565,0.361,0.77,1.009,2.075,0.741,0.456,0.144,0.055,1.504,0.201,1.211,1.001,0.518,2.506,0.296,0.635,0.457,1.976,0.256,0.203,0.046],"R2_fcn":[0.654,0.704,0.495,0.611,0.442,0.603,0.149,0.804,0.776,0.854,0.813,0.686,0.676,0.811,0.79,0.69,0.793,0.877,0.693,0.86,0.794,0.916,0.87,0.896,0.898,0.68,0.843,0.726,0.527,0.564,0.838,0.798,0.858,0.517,0.872,0.829,0.627,0.85,0.734,0.83,0.792],"RMSE_fcn":[0.649,2.447,1.747,1.814,1.868,1.128,1.485,1.655,1.635,1.618,2.587,2.414,2.655,1.268,1.891,2.753,1.894,2.045,2.412,2.098,1.739,1.893,2.139,3.16,1.119,1.38,2.232,1.736,2.837,2.319,3.145,1.909,1.718,1.739,2.64,1.437,1.967,1.307,1.537,1.484,1.524],"MAE_fcn":[0.125,1.179,0.582,1.126,0.286,0.372,0.449,0.767,0.109,0.604,1.06,0.406,0.977,0.165,0.664,0.284,0.133,0.252,0.132,1.049,0.13,0.849,1.302,1.728,0.163,0.477,0.185,0.652,2.142,1.095,1.537,0.557,0.466,1.052,1.453,0.26,0.29,0.174,0.446,0.058,0.438]},"columns":[{"id":"sitename","name":"sitename","type":"character"},{"id":"R2_lstm","name":"R2_lstm","type":"numeric"},{"id":"RMSE_lstm","name":"RMSE_lstm","type":"numeric"},{"id":"MAE_lstm","name":"MAE_lstm","type":"numeric"},{"id":"R2_fcn","name":"R2_fcn","type":"numeric"},{"id":"RMSE_fcn","name":"RMSE_fcn","type":"numeric"},{"id":"MAE_fcn","name":"MAE_fcn","type":"numeric"}],"dataKey":"8a618f880b83415606a298b6377490f8"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script><pre><code><span><span class="co">## `summarise()` has grouped output by 'doy'. You can override using the `.groups`</span></span>
 <span><span class="co">## argument.</span></span></code></pre>
 <p><img src="01_results_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p><img src="01_results_files/figure-html/unnamed-chunk-5-1.png" width="1344"></p>
