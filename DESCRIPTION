@@ -25,5 +25,6 @@ Suggests:
     ggplot2,
     dplyr,
     patchwork,
-    knitr
+    knitr,
+    tidyr
 VignetteBuilder: knitr
