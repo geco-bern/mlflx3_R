@@ -24,6 +24,6 @@ RUN R -e "install.packages( \
       repos='http://cran.rstudio.com/')"
 RUN R -e "Sys.setenv(CUDA='11.7'); torch::install_torch(); quit('no')"
 
-EXPOSE 5656
+EXPOSE 8787
 
 CMD ["/init"]
