@@ -4,7 +4,7 @@
 
 # Session Data files
 .RData
-data/leave_site_out_weights/*.pt
+data/leave_site_out_weights_*/*.pt
 
 # User-specific files
 .Ruserdata
