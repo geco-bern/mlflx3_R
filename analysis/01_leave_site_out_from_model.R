@@ -94,12 +94,12 @@ leave_site_out_output <- lapply(sites, function(site){
   }
 
   # run the model on the test data
-  pred <- predict(fitted, test_dl)
+  pred <- as.numeric(predict(fitted, test_dl))
 
   # back convert centered data (should not be necessary update runs)
-  train_mean <- train_center$GPP_NT_VUT_REF_mean
-  train_sd <- train_center$GPP_NT_VUT_REF_sd
-  pred <- (as.numeric(torch_tensor(pred, device = "cpu")) * train_sd) + train_mean
+  #train_mean <- train_center$GPP_NT_VUT_REF_mean
+  #train_sd <- train_center$GPP_NT_VUT_REF_sd
+  #pred <- (pred * train_sd) + train_mean
 
   # add date for easy integration in
   # original data
@@ -115,9 +115,7 @@ leave_site_out_output <- lapply(sites, function(site){
   return(data.frame(
     sitename = site,
     date = date,
-    GPP_pred = pred,
-    GPP_mean = train_mean,
-    GPP_sd = train_sd
+    GPP_pred = pred
   ))
 })
 
