@@ -15,7 +15,7 @@ library(ggplot2)
 
 Original stats
 
-```{r echo = FALSE}
+```{r echo = FALSE, , warning = FALSE}
 # read in the modelled data
 df <- read.csv(here::here("data/LSTM_nocondition_results_apr22.csv")) |>
   mutate(
@@ -34,7 +34,7 @@ statistics_global <- df |>
 reactable::reactable(statistics_global)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, , warning = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
   group_by(sitename) |>
@@ -45,8 +45,8 @@ statistics_sites <- df |>
   )  |>
   mutate(
     across(where(is.double),
-    round,
-    3)
+    \(x) round(x, 3, na.rm = TRUE)
+    )
   )
 
 reactable::reactable(statistics_sites)

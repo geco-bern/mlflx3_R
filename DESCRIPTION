@@ -1,15 +1,15 @@
 Package: MLFX2
 Title: Machine Learning for fluxes v2
 Version: 2.0
-Authors@R: 
-    person(
-      given = "John",
-      family = "Doe",
-      email = "john.doe@example.com",
-      role = c("aut", "cre"),
-      comment = c(ORCID = "0000-0000-0000-0000")
-    )
-Description: Estimate daily GPP values from climatological values using a LSTM.
+Authors@R: c(person(
+               family = "Hufkens",
+               given = "Koen",
+               email = "koen.hufkens@gmail.com",
+               role = c("aut", "cre"),
+               comment = c(ORCID = "0000-0002-5070-8109")
+               )
+           )
+Description: Estimate daily GPP values from climatological values using a LSTM, an R implementation
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends:
@@ -29,3 +29,5 @@ Suggests:
     tidyr,
     reactable
 VignetteBuilder: knitr
+URL: https://github.com/geco-bern/mlfx2_R
+BugReports: https://github.com/geco-bern/mlfx2_R/issues

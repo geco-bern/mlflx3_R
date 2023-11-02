@@ -16,7 +16,7 @@ library(reactable)
 
 > Summary results / stats... 20 epochs for the LSTM (to be updated), 150 epochs FCN.
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning = FALSE, message=FALSE}
 # read in the modelled data
 df_lstm <- readRDS(here::here("data/leave_site_out_output_lstm.rds")) |>
   rename(
@@ -52,7 +52,7 @@ statistics_global <- df |>
 reactable::reactable(statistics_global)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, , warning = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
   group_by(sitename) |>
@@ -66,8 +66,8 @@ statistics_sites <- df |>
   ) |>
   mutate(
     across(where(is.double),
-    round,
-    3)
+    \(x) round(x, 3, na.rm = TRUE)
+    )
   )
 
 reactable::reactable(statistics_sites)
