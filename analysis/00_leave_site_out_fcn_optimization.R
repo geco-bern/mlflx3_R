@@ -11,7 +11,7 @@ epochs <- 150 # for testing purposes, set to 150 for full run
 library(torch)
 library(luz)
 library(dplyr)
-source("R/rnn_model.R")
+source("R/fcn_model.R")
 source("R/gpp_dataset.R")
 
 # automatically use the GPU if available
@@ -51,7 +51,7 @@ leave_site_out_output <- lapply(sites, function(site){
   # if sites are skipped run the offline
   # routine to colate all data
   if(file.exists(
-    here::here("data/leave_site_out_weights_lstm/",
+    here::here("data/leave_site_out_weights_fcn/",
                paste0(site, ".pt"))
   )) {
     message(sprintf("run completed, skipping %s ...", site))
@@ -122,7 +122,6 @@ leave_site_out_output <- lapply(sites, function(site){
     ) |>
     set_hparams(
       input_size = 11,
-      hidden_size = 256,
       output_size = 1
     ) |>
     fit(
@@ -135,7 +134,7 @@ leave_site_out_output <- lapply(sites, function(site){
   luz_save(
     fitted,
     file.path(
-      here::here("data/leave_site_out_weights_lstm/",
+      here::here("data/leave_site_out_weights_fcn/",
                  paste0(site, ".pt"))
     )
   )
@@ -170,6 +169,6 @@ leave_site_out_output <- bind_rows(leave_site_out_output)
 # save as a compressed RDS
 saveRDS(
   leave_site_out_output,
-  "data/leave_site_out_output_lstm.rds",
+  "data/leave_site_out_output_fcn.rds",
   compress = "xz"
 )
