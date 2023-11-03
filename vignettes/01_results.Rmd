@@ -12,6 +12,7 @@ vignette: >
 library(dplyr)
 library(ggplot2)
 library(reactable)
+options(dplyr.summarise.inform = FALSE)
 ```
 
 > Summary results / stats... 20 epochs for the LSTM (to be updated), 150 epochs FCN.
@@ -27,7 +28,7 @@ df_fcn <- readRDS(here::here("data/leave_site_out_output_fcn.rds")) |>
     "GPP_pred_fcn" = "GPP_pred"
   )
 
-# read in the original data
+# read in the original input data
 orig <- readRDS(here::here("data/df_imputed.rds"))
 
 # join data
@@ -37,6 +38,22 @@ df <- left_join(df, orig) |>
     date = as.Date(date)
   )
 
+# merge python results (paper)
+df_python <- read.csv(here::here("data/LSTM_nocondition_results_apr22.csv")) |>
+  mutate(
+    date = as.Date(date)
+  ) |>
+  rename(
+    "GPP_pred_python" = "lstm_cond0"
+  ) |>
+  select(
+    sitename,
+    date,
+    GPP_pred_python
+  )
+
+df <- left_join(df, df_python)
+
 # R squared and RMSE global
 statistics_global <- df |>
   summarize(
@@ -45,7 +62,10 @@ statistics_global <- df |>
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
     R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
+    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
+    R2_python = summary(lm(GPP_pred_python ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
   round(3)
 
@@ -62,7 +82,10 @@ statistics_sites <- df |>
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
     R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
+    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
+    R2_python = summary(lm(GPP_pred_python ~ GPP_NT_VUT_REF))$r.squared,
+    RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
+    MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
   mutate(
     across(where(is.double),
@@ -83,6 +106,7 @@ seasonal_mean <- df |>
   summarize(
     GPP_pred_lstm_mean = mean(GPP_pred_lstm),
     GPP_pred_fcn_mean = mean(GPP_pred_fcn),
+    GPP_pred_python_mean = mean(GPP_pred_python),
     GPP_obs_mean = mean(GPP_NT_VUT_REF)
   ) |>
   tidyr::pivot_longer(
@@ -114,7 +138,7 @@ p <- ggplot(seasonal_mean) +
 print(p)
 ```
 
-```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14}
+```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14, eval = FALSE}
 # plot all validation graphs
 p <- ggplot(df) +
   geom_line(
