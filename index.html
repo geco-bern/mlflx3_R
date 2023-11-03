@@ -65,9 +65,6 @@
 <li>
       <a href="articles/01_results.html">Results</a>
     </li>
-    <li>
-      <a href="articles/02_original_results.html">Python results</a>
-    </li>
   </ul>
 </li>
         <li>
@@ -89,36 +86,41 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time">An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time<a class="anchor" aria-label="anchor" href="#an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time"></a>
+<div class="page-header"><h1 id="refactored-code-base-of-the-paper-an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time">Refactored code base of the paper: An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time<a class="anchor" aria-label="anchor" href="#refactored-code-base-of-the-paper-an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time"></a>
 </h1></div>
+<p>by Piersilvio De Bartolomeis, Alexandru Meterez, Zixin Shu, and Benjamin David Stocker</p>
 <div class="section level2">
-<h2 id="abstract">Abstract:<a class="anchor" aria-label="anchor" href="#abstract"></a>
+<h2 id="abstract">Abstract<a class="anchor" aria-label="anchor" href="#abstract"></a>
 </h2>
 <p>Accurate predictions of environmental controls on ecosystem photosynthesis are essential for understanding the impacts of climate change and extreme events on the carbon cycle and the provisioning of ecosystem services. Using time-series measurements of ecosystem fluxes paired with measurements of meteorological variables from a network of globally distributed sites and remotely sensed vegetation indices, we train a recurrent deep neural network (Long-Short-Term Memory, LSTM), a simple deep neural network (DNN), and a mechanistic, theory-based photosynthesis model with the aim to predict ecosystem gross primary production (GPP). We test these models’ ability to spatially and temporally generalise across a wide range of environmental conditions. Both neural network models outperform the theory-based model considering leave-site-out cross-validation (LSOCV). The LSTM model performs best and achieves a mean R2 of 0.78 across sites in the LSOCV and an average R2 of 0.82 across relatively moist temperate and boreal sites. This suggests that recurrent deep neural networks provide a basis for robust data-driven ecosystem photosynthesis modelling in respective biomes. However, limits to global model upscaling are identified using cross-validation by vegetation types and by continents. In particular, our model performance is weakest at relatively arid sites where unknown vegetation exposure to water limitation limits model reliability.</p>
+<p><a href="https://egusphere.copernicus.org/preprints/2023/egusphere-2023-1826/" class="external-link">Pre-print</a> <a href="https://github.com/geco-bern/mlflx2" class="external-link">Original repository</a></p>
 </div>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
-</div>
-<div class="section level2">
-<h2 id="docker-images">Docker images<a class="anchor" aria-label="anchor" href="#docker-images"></a>
-</h2>
-<p>A custom docker is provided which includes the GPU torch setup. You can build this docker image using the below command. This will download the NVIDIA CUDA drivers for GPU support, the tidyverse, rstudio IDE and quarto publishing environment. Note that this setup will require some time to build given the the large downloads involved. Once build locally no further downloads will be required.</p>
-<pre><code># In the main project directory
+<p>Note that this refactored code only reproduces a part of the complete workflow. However, code shown should allow for the quick adaptation of it to run different stratification (cross-validation) scenarios. The code shown here runs the most expensive leave-site-out cross validation, which makes up the bulk of the analysis in the manuscript.</p>
+<p>It is adviced to run this code on an accelerated setup (CUDA GPU). To ensure consistency across platforms, and not deal with a zoo of required CUDA drivers which can conflict due to platform and ML platforms already in use I suggest to use the included docker file (and environment). To install and use docker on your system I refer to the <a href="https://www.docker.com/" class="external-link">docker documentation</a>.</p>
+<div class="section level3">
+<h3 id="docker-images">Docker images<a class="anchor" aria-label="anchor" href="#docker-images"></a>
+</h3>
+<p>The dockerfile included provides a GPU torch setup. You can build this docker image using the below command. This will download the NVIDIA CUDA drivers for GPU support, the tidyverse, rstudio IDE and quarto publishing environment. Note that this setup will require some time to build given the the large downloads involved. Once build locally no further downloads will be required.</p>
+<pre><code># In the main project directory run
 docker build -f Dockerfile -t rocker-torch .</code></pre>
-<p>To spin up the docker image use:</p>
-<pre><code># CPU-only
-docker run -e PASSWORD="rstudio" -p 5656:8787 -v $(pwd):/workspace -p 8787:8787 rocker/ml
-
-# GPU support (NVIDIA)
-docker run --gpus all -e PASSWORD="rstudio" -p 5656:8787 -v $(pwd):/workspace rocker-torch</code></pre>
-<p>When in the main R project folder run either the CPU or GPU command to start the docker instance. In any browser use the <a href="http://localhost:5656" class="external-link">http://localhost:5656</a> url to access the docker RStudio Server instance which should be running.</p>
-<p>The password to the RStudio Server instance is set to <code>rstudio</code> when using the above commands (but can and should be changed if the computer is exposed to a larger institutional network). Anyone with the default password will have access to your virtual machine and mounted data. Data will be mounted in the docker virtual machine at <code>/workspace</code> and is fully accessible (writing / reading of files on your local file system).</p>
+<p>To spin up a GPU docker image use in the project directory:</p>
+<pre><code>docker run --gpus all -e PASSWORD="rstudio" -p 5656:8787 -v $(pwd):/workspace rocker-torch</code></pre>
+<p>In any browser use the <a href="http://localhost:5656" class="external-link">http://localhost:5656</a> url to access the docker RStudio Server instance which should be running. The password to the RStudio Server instance is set to <code>rstudio</code> when using the above commands (but can and should be changed if the computer is exposed to a larger institutional network). This is not a secured setup, use a stronger password or a local firewall to avoid abuse.</p>
+<p>Data will be mounted in the docker virtual machine at <code>/workspace</code> and is fully accessible (writing and reading of files on your local file system).</p>
+</div>
+<div class="section level3">
+<h3 id="running-the-analysis">Running the analysis<a class="anchor" aria-label="anchor" href="#running-the-analysis"></a>
+</h3>
+<p>Analysis scripts are stored in the <code>analysis</code> folder and should be run in sequence. Note that the standard deep neural net is small enough to run an CPU. Summary <a href="https://geco-bern.github.io/mlfx2_R/articles/01_results.html" class="external-link">results</a> are automatically rendered using the vignettes in the <code>vignettes</code> folder.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="running-the-analysis">Running the analysis<a class="anchor" aria-label="anchor" href="#running-the-analysis"></a>
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Analysis are stored in the <code>analysis</code> folder and should be run in sequence.</p>
+<p>De Bartolomeis, P., Meterez, A., Shu, Z., and Stocker, B. D.: An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time, EGUsphere [preprint], <a href="https://doi.org/10.5194/egusphere-2023-1826" class="external-link uri">https://doi.org/10.5194/egusphere-2023-1826</a>, 2023.</p>
 </div>
 </div>
   </div>
