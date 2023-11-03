@@ -44,7 +44,7 @@ Data will be mounted in the docker virtual machine at `/workspace` and is fully 
 
 ### Running the analysis
 
-Analysis scripts are stored in the `analysis` folder and should be run in sequence. Note that the standard deep neural net is small enough to run an CPU. Summary [results](https://geco-bern.github.io/mlfx2_R/articles/01_results.html) are automatically rendered using the vignettes in the `vignettes` folder.
+Analysis scripts are stored in the `analysis` folder and should be run in sequence. Note that the standard deep neural net is small enough to run an CPU. Summary [results](https://geco-bern.github.io/mlflx2_R/articles/01_results.html) are automatically rendered using the vignettes in the `vignettes` folder.
 
 ## References
 
