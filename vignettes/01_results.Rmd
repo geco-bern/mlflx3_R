@@ -75,7 +75,7 @@ reactable::reactable(statistics_global)
 ```{r echo = FALSE, , warning = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
-  group_by(sitename) |>
+  group_by(sitename, koeppen_code) |>
   summarize(
     R2_lstm = summary(lm(GPP_pred_lstm ~ GPP_NT_VUT_REF))$r.squared,
     RMSE_lstm = sqrt(mean((GPP_pred_lstm - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
@@ -138,39 +138,29 @@ p <- ggplot(seasonal_mean) +
 print(p)
 ```
 
-```{r echo = FALSE, warning=FALSE, fig.height=20, fig.width = 14, eval = FALSE}
+```{r echo = FALSE, warning=FALSE}
+statistics_sites_long <- statistics_sites |>
+  select(
+    starts_with("R2"),
+    sitename,
+    koeppen_code
+  ) |>
+  tidyr::pivot_longer(
+    cols = starts_with("R2"),
+    names_to = "R2",
+    values_to = "value"
+  )
+
 # plot all validation graphs
-p <- ggplot(df) +
-  geom_line(
+p <- ggplot(statistics_sites_long) +
+  geom_boxplot(
     aes(
-      date,
-      GPP_NT_VUT_REF
+      koeppen_code,
+      value,
+      fill = R2
     )
   ) +
-  geom_line(
-    aes(
-      date,
-      GPP_pred_lstm
-    ),
-    col = "red"
-  ) +
-  geom_line(
-    aes(
-      date,
-      GPP_pred_fcn
-    ),
-    col = "green"
-  ) +
-  labs(
-    x = "Date",
-    y = "GPP"
-  ) +
-  theme_bw() +
-  facet_wrap(
-    ~sitename,
-    scales = "free",
-    ncol = 4
-    )
+  theme_bw()
 
 print(p)
 ```
