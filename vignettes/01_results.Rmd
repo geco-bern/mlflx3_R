@@ -15,7 +15,8 @@ library(reactable)
 options(dplyr.summarise.inform = FALSE)
 ```
 
-> Summary results / stats... 20 epochs for the LSTM (to be updated), 150 epochs FCN.
+Summary results of training FCN / LSTM models on 150 epochs.
+
 
 ```{r echo = FALSE, warning = FALSE, message=FALSE}
 # read in the modelled data
