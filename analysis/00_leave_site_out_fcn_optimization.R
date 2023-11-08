@@ -114,7 +114,7 @@ leave_site_out_output <- lapply(sites, function(site){
   # fit the model by defining
   # a setup, setting parameters
   # and then initiating the fitting
-  fitted <- rnn_model |>
+  fitted <- fcn_model |>
     setup(
       loss = nn_mse_loss(),
       optimizer = optim_adam,

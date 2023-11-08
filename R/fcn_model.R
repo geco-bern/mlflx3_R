@@ -6,7 +6,7 @@
 #' @return a bare FCN (DNN) model, to be configured and run
 #' @export
 
-rnn_model <- torch::nn_module(
+fcn_model <- torch::nn_module(
   "FCN",
   initialize = function(
     input_size,
