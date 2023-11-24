@@ -30,9 +30,7 @@ fcn_model <- torch::nn_module(
 
   forward = function(x) {
 
-    # stack the normal neural net
-    # components on the lstm features
-    # and squeeze the data to comform
+    # squeeze the data to conform
     # to the target output shape
     self$fc(x) |>
       torch::torch_squeeze(-1)
