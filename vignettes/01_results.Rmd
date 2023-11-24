@@ -58,13 +58,13 @@ df <- left_join(df, df_python)
 # R squared and RMSE global
 statistics_global <- df |>
   summarize(
-    R2_lstm = summary(lm(GPP_pred_lstm ~ GPP_NT_VUT_REF))$r.squared,
+    R2_lstm = cor(GPP_pred_lstm, GPP_NT_VUT_REF)^2,
     RMSE_lstm = sqrt(mean((GPP_pred_lstm - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
+    R2_fcn = cor(GPP_pred_fcn, GPP_NT_VUT_REF)^2,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_python = summary(lm(GPP_pred_python ~ GPP_NT_VUT_REF))$r.squared,
+    R2_python = cor(GPP_pred_python, GPP_NT_VUT_REF)^2,
     RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
@@ -78,13 +78,13 @@ reactable::reactable(statistics_global)
 statistics_sites <- df |>
   group_by(sitename, koeppen_code) |>
   summarize(
-    R2_lstm = summary(lm(GPP_pred_lstm ~ GPP_NT_VUT_REF))$r.squared,
+    R2_lstm = cor(GPP_pred_lstm, GPP_NT_VUT_REF)^2,
     RMSE_lstm = sqrt(mean((GPP_pred_lstm - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_fcn = summary(lm(GPP_pred_fcn ~ GPP_NT_VUT_REF))$r.squared,
+    R2_fcn = cor(GPP_pred_fcn, GPP_NT_VUT_REF)^2,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_python = summary(lm(GPP_pred_python ~ GPP_NT_VUT_REF))$r.squared,
+    R2_python = cor(GPP_pred_python, GPP_NT_VUT_REF)^2,
     RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
