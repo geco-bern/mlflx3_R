@@ -1,6 +1,6 @@
-Package: MLFLX2
+Package: MLFLX3
 Title: Machine Learning for fluxes v2
-Version: 2.0
+Version: 1.0
 Authors@R: c(person(
                family = "Hufkens",
                given = "Koen",
@@ -29,5 +29,5 @@ Suggests:
     tidyr,
     reactable
 VignetteBuilder: knitr
-URL: https://github.com/geco-bern/mlfx2_R
-BugReports: https://github.com/geco-bern/mlfx2_R/issues
+URL: https://github.com/geco-bern/mlfx3_R
+BugReports: https://github.com/geco-bern/mlfx3_R/issues
