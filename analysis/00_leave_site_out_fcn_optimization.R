@@ -5,7 +5,11 @@ message("Leave-Site-Out routine...")
 # and the torch seed (both function independently)
 set.seed(1)
 torch::torch_manual_seed(42)
-epochs <- 150 # for testing purposes, set to 150 for full run
+
+# set epochs and early stopping
+# metrics
+epochs <- 150
+patience <- 20
 
 # required libraries
 library(torch)
@@ -126,7 +130,12 @@ leave_site_out_output <- lapply(sites, function(site){
     ) |>
     fit(
       train_dl,
-      epochs = epochs
+      epochs = epochs,
+      callbacks = list(
+        luz_callback_early_stopping(
+          patience = patience
+        )
+      )
     )
 
   # save model for this iteration
