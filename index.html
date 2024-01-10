@@ -86,15 +86,8 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="refactored-code-base-of-the-paper-an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time">Refactored code base of the paper: An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time<a class="anchor" aria-label="anchor" href="#refactored-code-base-of-the-paper-an-effective-machine-learning-approach-for-predicting-ecosystem-co2-assimilation-across-space-and-time"></a>
+<div class="page-header"><h1 id="modelling-flux-responses-to-drough-using-dnn">Modelling flux responses to drough using DNN<a class="anchor" aria-label="anchor" href="#modelling-flux-responses-to-drough-using-dnn"></a>
 </h1></div>
-<p>by Piersilvio De Bartolomeis, Alexandru Meterez, Zixin Shu, and Benjamin David Stocker</p>
-<div class="section level2">
-<h2 id="abstract">Abstract<a class="anchor" aria-label="anchor" href="#abstract"></a>
-</h2>
-<p>Accurate predictions of environmental controls on ecosystem photosynthesis are essential for understanding the impacts of climate change and extreme events on the carbon cycle and the provisioning of ecosystem services. Using time-series measurements of ecosystem fluxes paired with measurements of meteorological variables from a network of globally distributed sites and remotely sensed vegetation indices, we train a recurrent deep neural network (Long-Short-Term Memory, LSTM), a simple deep neural network (DNN), and a mechanistic, theory-based photosynthesis model with the aim to predict ecosystem gross primary production (GPP). We test these models’ ability to spatially and temporally generalise across a wide range of environmental conditions. Both neural network models outperform the theory-based model considering leave-site-out cross-validation (LSOCV). The LSTM model performs best and achieves a mean R2 of 0.78 across sites in the LSOCV and an average R2 of 0.82 across relatively moist temperate and boreal sites. This suggests that recurrent deep neural networks provide a basis for robust data-driven ecosystem photosynthesis modelling in respective biomes. However, limits to global model upscaling are identified using cross-validation by vegetation types and by continents. In particular, our model performance is weakest at relatively arid sites where unknown vegetation exposure to water limitation limits model reliability.</p>
-<p><a href="https://egusphere.copernicus.org/preprints/2023/egusphere-2023-1826/" class="external-link">Pre-print</a> / <a href="https://github.com/geco-bern/mlflx2" class="external-link">Original repository</a></p>
-</div>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
@@ -116,11 +109,6 @@ docker build -f Dockerfile -t rocker-torch .</code></pre>
 </h3>
 <p>Analysis scripts are stored in the <code>analysis</code> folder and should be run in sequence. Note that the standard deep neural net is small enough to run an CPU. Summary <a href="https://geco-bern.github.io/mlflx2_R/articles/01_results.html" class="external-link">results</a> are automatically rendered using the vignettes in the <code>vignettes</code> folder.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h2>
-<p>De Bartolomeis, P., Meterez, A., Shu, Z., and Stocker, B. D.: An effective machine learning approach for predicting ecosystem CO2 assimilation across space and time, EGUsphere [preprint], <a href="https://doi.org/10.5194/egusphere-2023-1826" class="external-link uri">https://doi.org/10.5194/egusphere-2023-1826</a>, 2023.</p>
 </div>
 </div>
   </div>
