@@ -11,17 +11,26 @@ torch::torch_manual_seed(42)
 epochs <- 150
 patience <- 20
 
+# overwrite previous model outputs
+force <- TRUE
+
 # required libraries
 library(torch)
 library(luz)
 library(dplyr)
 source("R/fcn_model.R")
 source("R/gpp_dataset.R")
+source("R/read_data.R")
 
 # automatically use the GPU if available
 device <- torch::torch_device(
   if (torch::cuda_is_available()) "cuda" else "cpu"
 )
+
+# warning
+if (!torch::cuda_is_available()) {
+  message("Running on CPU, this might take a bit longer than working on GPU!")
+}
 
 # read in data, only retain relevant features
 df <- readRDS("data/df_imputed.rds") |>
@@ -42,6 +51,10 @@ df <- readRDS("data/df_imputed.rds") |>
     'fpar'
   )
 
+# read in pre-processed data, including the fLUE
+# clusters check read_data.R for the routine
+df <- read_data()
+
 # leave site out routine
 sites <- unique(df$sitename)
 
@@ -51,13 +64,22 @@ sites <- unique(df$sitename)
 # get recycled if not carefully purged
 leave_site_out_output <- lapply(sites, function(site){
 
+  # grab cluster name based on the site name
+  # of the site based fold (i.e. dropping this
+  # site from the cluster it belongs to)
+  cluster <- df |>
+    filter(
+      sitename == site
+    )
+  cluster <- cluster$cluster[1]
+
   # check if run was already finished
   # if sites are skipped run the offline
-  # routine to colate all data
+  # routine to collate all data
   if(file.exists(
     here::here("data/leave_site_out_weights_fcn/",
-               paste0(site, ".pt"))
-  )) {
+               paste0(cluster, "_", site, ".pt"))
+  ) & !force ) {
     message(sprintf("run completed, skipping %s ...", site))
     return(NULL)
   }
@@ -66,7 +88,8 @@ leave_site_out_output <- lapply(sites, function(site){
   # training and testing data
   train <- df |>
     dplyr::filter(
-      sitename != !!site
+      sitename != !!site,
+      cluster == !!cluster
     )
 
   # calculated mean / sd to center
@@ -102,7 +125,8 @@ leave_site_out_output <- lapply(sites, function(site){
   # the dimensions of the input
   # should be equal to take advantage
   # of batch processing (probably due
-  # to underlying matrix optimization)
+  # to underlying matrix optimization
+  # which does not automatically pad)
   train_dl <- dataloader(
     train_ds,
     batch_size = 1,
@@ -133,6 +157,7 @@ leave_site_out_output <- lapply(sites, function(site){
       epochs = epochs,
       callbacks = list(
         luz_callback_early_stopping(
+          monitor = "train_loss",
           patience = patience
         )
       )
@@ -144,7 +169,7 @@ leave_site_out_output <- lapply(sites, function(site){
     fitted,
     file.path(
       here::here("data/leave_site_out_weights_fcn/",
-                 paste0(site, ".pt"))
+                 paste0(cluster, "_", site, ".pt"))
     )
   )
 
@@ -167,6 +192,7 @@ leave_site_out_output <- lapply(sites, function(site){
   # return comparisons
   return(data.frame(
     sitename = site,
+    cluster = cluster,
     date = date,
     GPP_pred = pred
   ))
