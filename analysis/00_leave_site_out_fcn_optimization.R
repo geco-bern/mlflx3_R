@@ -1,5 +1,5 @@
 # Feedback on startup
-message("Leave-Site-Out routine...")
+message("Leave-Site-Out FCN routine...")
 
 # set both the R seed
 # and the torch seed (both function independently)
@@ -31,25 +31,6 @@ device <- torch::torch_device(
 if (!torch::cuda_is_available()) {
   message("Running on CPU, this might take a bit longer than working on GPU!")
 }
-
-# read in data, only retain relevant features
-df <- readRDS("data/df_imputed.rds") |>
-  dplyr::select(
-    'sitename',
-    'date',
-    'GPP_NT_VUT_REF',
-    'TA_F',
-    'SW_IN_F',
-    'TA_F_DAY',
-    'LW_IN_F',
-    'WS_F',
-    'P_F',
-    'VPD_F',
-    'TA_F_NIGHT',
-    'PA_F',
-    'wscal',
-    'fpar'
-  )
 
 # read in pre-processed data, including the fLUE
 # clusters check read_data.R for the routine

@@ -1,5 +1,5 @@
 # Feedback on startup
-message("Leave-Site-Out routine...")
+message("Leave-Site-Out LSTM routine...")
 
 # set both the R seed
 # and the torch seed (both function independently)
@@ -130,7 +130,7 @@ leave_site_out_output <- lapply(sites, function(site){
     ) |>
     set_hparams(
       input_size = 11,
-      hidden_size = 256,
+      hidden_size = 128,
       output_size = 1
     ) |>
     fit(
