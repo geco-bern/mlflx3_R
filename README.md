@@ -1,4 +1,8 @@
-# Modelling flux responses to drough using DNN
+# Modelling flux responses to drought using DNN
+
+This analysis explores if LSTM models have any advantage over conventional neural nets when modelling GPP. Given that fAPAR is included in the predictors any conventional wisdom suggests that lagged dependencies are encoded in this variable. Splitting out some of this variability can only be accomplished in cases where drought would limit the productivity without altering the state of the canopy, i.e. evergreen trees. It is therefore assumed hypothesized that the LSTM architecture might perform better for evergreen trees which are exposed to drought conditions.
+
+The workflow will use a leave-site-out cross validation as a robustness check, i.e. training the model on all but the left out site. The left out site will be used as a test case. Data are split between drought decidious and evegreen droughted locations as previously described in Stocker et al. 2018 (see figure 6).
 
 ## Setup
 
@@ -36,3 +40,8 @@ Data will be mounted in the docker virtual machine at `/workspace` and is fully 
 ### Running the analysis
 
 Analysis scripts are stored in the `analysis` folder and should be run in sequence. Note that the standard deep neural net is small enough to run an CPU. Summary [results](https://geco-bern.github.io/mlflx2_R/articles/01_results.html) are automatically rendered using the vignettes in the `vignettes` folder.
+
+## References
+
+Stocker, Benjamin D., Jakob Zscheischler, Trevor F. Keenan, I. Colin Prentice, Josep Peñuelas, and Sonia I. Seneviratne. “Quantifying Soil Moisture Impacts on Light Use Efficiency across Biomes.” New Phytologist 218, no. 4 (June 2018): 1430–49. https://doi.org/10.1111/nph.15123.
+
