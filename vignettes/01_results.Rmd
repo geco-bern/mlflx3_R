@@ -39,22 +39,6 @@ df <- left_join(df, orig) |>
     date = as.Date(date)
   )
 
-# merge python results (paper)
-df_python <- read.csv(here::here("data/LSTM_nocondition_results_apr22.csv")) |>
-  mutate(
-    date = as.Date(date)
-  ) |>
-  rename(
-    "GPP_pred_python" = "lstm_cond0"
-  ) |>
-  select(
-    sitename,
-    date,
-    GPP_pred_python
-  )
-
-df <- left_join(df, df_python)
-
 # R squared and RMSE global
 statistics_global <- df |>
   summarize(
@@ -63,10 +47,7 @@ statistics_global <- df |>
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
     R2_fcn = cor(GPP_pred_fcn, GPP_NT_VUT_REF)^2,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_python = cor(GPP_pred_python, GPP_NT_VUT_REF)^2,
-    RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
+    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
   round(3)
 
@@ -76,23 +57,21 @@ reactable::reactable(statistics_global)
 ```{r echo = FALSE, , warning = FALSE}
 # R squared and RMSE by site
 statistics_sites <- df |>
-  group_by(sitename, koeppen_code) |>
+  group_by(sitename, cluster) |>
   summarize(
     R2_lstm = cor(GPP_pred_lstm, GPP_NT_VUT_REF)^2,
     RMSE_lstm = sqrt(mean((GPP_pred_lstm - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
     MAE_lstm = abs(mean((GPP_pred_lstm - GPP_NT_VUT_REF), na.rm = TRUE)),
     R2_fcn = cor(GPP_pred_fcn, GPP_NT_VUT_REF)^2,
     RMSE_fcn = sqrt(mean((GPP_pred_fcn - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE)),
-    R2_python = cor(GPP_pred_python, GPP_NT_VUT_REF)^2,
-    RMSE_python = sqrt(mean((GPP_pred_python - GPP_NT_VUT_REF)^2, na.rm = TRUE)),
-    MAE_python = abs(mean((GPP_pred_python - GPP_NT_VUT_REF), na.rm = TRUE))
+    MAE_fcn = abs(mean((GPP_pred_fcn - GPP_NT_VUT_REF), na.rm = TRUE))
   ) |>
   mutate(
     across(where(is.double),
     \(x) round(x, 3)
     )
-  )
+  ) |>
+  arrange(cluster)
 
 reactable::reactable(statistics_sites)
 ```
@@ -103,11 +82,10 @@ seasonal_mean <- df |>
   mutate(
     doy = as.numeric(format(date, "%j"))
   ) |>
-  group_by(doy, koeppen_code) |>
+  group_by(doy, cluster) |>
   summarize(
     GPP_pred_lstm_mean = mean(GPP_pred_lstm),
     GPP_pred_fcn_mean = mean(GPP_pred_fcn),
-    GPP_pred_python_mean = mean(GPP_pred_python),
     GPP_obs_mean = mean(GPP_NT_VUT_REF)
   ) |>
   tidyr::pivot_longer(
@@ -132,7 +110,7 @@ p <- ggplot(seasonal_mean) +
   ) +
   theme_bw() +
   facet_wrap(
-    ~ koeppen_code,
+    ~ cluster,
     ncol = 4
     )
 
@@ -144,7 +122,7 @@ statistics_sites_long <- statistics_sites |>
   select(
     starts_with("R2"),
     sitename,
-    koeppen_code
+    cluster
   ) |>
   tidyr::pivot_longer(
     cols = starts_with("R2"),
@@ -156,7 +134,7 @@ statistics_sites_long <- statistics_sites |>
 p <- ggplot(statistics_sites_long) +
   geom_boxplot(
     aes(
-      koeppen_code,
+      cluster,
       value,
       fill = R2
     )
@@ -166,3 +144,33 @@ p <- ggplot(statistics_sites_long) +
 print(p)
 ```
 
+
+```{r echo = FALSE, warning=FALSE, fig.height = 13, fig.width = 8}
+df_plot <- df |>
+  tidyr::pivot_longer(
+    cols = starts_with("GPP"),
+    names_to = "source",
+    values_to = "GPP"
+  )
+
+# plot all validation graphs
+p <- ggplot(df_plot) +
+  geom_line(
+    aes(
+      date,
+      GPP,
+      group = source,
+      colour = source
+    )
+  ) +
+  labs(
+    x = "Date",
+    y = "GPP"
+  ) +
+  theme_bw() +
+  facet_grid(
+    sitename ~ cluster
+    )
+
+print(p)
+```
