@@ -16,6 +16,7 @@ Depends:
     R (>= 4.3)
 Imports:
     torch,
+    luz,
     dplyr
 License: AGPL-3
 ByteCompile: true
