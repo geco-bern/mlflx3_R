@@ -76,7 +76,7 @@ statistics_sites <- df |>
 reactable::reactable(statistics_sites)
 ```
 
-```{r echo = FALSE, warning=FALSE}
+```{r echo = FALSE, warning=FALSE, fig.width = 10}
 
 seasonal_mean <- df |>
   mutate(
@@ -117,7 +117,7 @@ p <- ggplot(seasonal_mean) +
 print(p)
 ```
 
-```{r echo = FALSE, warning=FALSE}
+```{r echo = FALSE, warning=FALSE, fig.width = 10}
 statistics_sites_long <- statistics_sites |>
   select(
     starts_with("R2"),
@@ -145,7 +145,7 @@ print(p)
 ```
 
 
-```{r echo = FALSE, warning=FALSE, fig.height = 13, fig.width = 8}
+```{r echo = FALSE, warning=FALSE, fig.height = 13, fig.width = 10}
 df_plot <- df |>
   tidyr::pivot_longer(
     cols = starts_with("GPP"),
@@ -170,6 +170,39 @@ p <- ggplot(df_plot) +
   theme_bw() +
   facet_grid(
     sitename ~ cluster
+    )
+
+print(p)
+```
+
+```{r echo = FALSE, warning=FALSE, fig.height = 13, fig.width = 10}
+df_plot <- df |>
+  tidyr::pivot_longer(
+    cols = starts_with("GPP"),
+    names_to = "source",
+    values_to = "GPP"
+  ) |>
+  filter(
+    cluster == "cGR"
+  )
+
+# plot all validation graphs
+p <- ggplot(df_plot) +
+  geom_line(
+    aes(
+      date,
+      GPP,
+      group = source,
+      colour = source
+    )
+  ) +
+  labs(
+    x = "Date",
+    y = "GPP"
+  ) +
+  theme_bw() +
+  facet_grid(
+    sitename ~ .
     )
 
 print(p)
