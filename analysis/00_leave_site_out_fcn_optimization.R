@@ -8,7 +8,7 @@ torch::torch_manual_seed(42)
 
 # set epochs and early stopping
 # metrics
-epochs <- 150
+epochs <- 200
 patience <- 20
 
 # overwrite previous model outputs
