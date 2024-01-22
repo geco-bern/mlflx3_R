@@ -4,6 +4,12 @@ This analysis explores if LSTM models have any advantage over conventional neura
 
 The workflow will use a leave-site-out cross validation as a robustness check, i.e. training the model on all but the left out site. The left out site will be used as a test case. Data are split between drought decidious and evegreen droughted locations as previously described in Stocker et al. 2018 (see figure 6).
 
+### Alternative approaches
+
+- statefulness during training (see [1](https://discuss.pytorch.org/t/is-lstm-stateful-between-inner-batches/50103) and [2](https://discuss.pytorch.org/t/confusion-regarding-pytorch-lstms-compared-to-keras-stateful-lstm/44502))
+- time series augmentation
+- transformers ([3](https://pytorch.org/tutorials/beginner/transformer_tutorial.html) - not supported yet by torch library)
+
 ## Setup
 
 Note that this refactored code only reproduces a part of the complete workflow. However, code shown should allow for the quick adaptation of it to run different stratification (cross-validation) scenarios. The code shown here runs the most expensive leave-site-out cross validation, which makes up the bulk of the analysis in the manuscript.
