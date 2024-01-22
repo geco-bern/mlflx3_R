@@ -90,6 +90,15 @@
 </h1></div>
 <p>This analysis explores if LSTM models have any advantage over conventional neural nets when modelling GPP. Given that fAPAR is included in the predictors any conventional wisdom suggests that lagged dependencies are encoded in this variable. Splitting out some of this variability can only be accomplished in cases where drought would limit the productivity without altering the state of the canopy, i.e. evergreen trees. It is therefore assumed hypothesized that the LSTM architecture might perform better for evergreen trees which are exposed to drought conditions.</p>
 <p>The workflow will use a leave-site-out cross validation as a robustness check, i.e. training the model on all but the left out site. The left out site will be used as a test case. Data are split between drought decidious and evegreen droughted locations as previously described in Stocker et al. 2018 (see figure 6).</p>
+<div class="section level3">
+<h3 id="alternative-approaches">Alternative approaches<a class="anchor" aria-label="anchor" href="#alternative-approaches"></a>
+</h3>
+<ul>
+<li>statefulness during training (see <a href="https://discuss.pytorch.org/t/is-lstm-stateful-between-inner-batches/50103" class="external-link">1</a> and <a href="https://discuss.pytorch.org/t/confusion-regarding-pytorch-lstms-compared-to-keras-stateful-lstm/44502" class="external-link">2</a>)</li>
+<li>time series augmentation</li>
+<li>transformers (<a href="https://pytorch.org/tutorials/beginner/transformer_tutorial.html" class="external-link">3</a> - not supported yet by torch library)</li>
+</ul>
+</div>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
